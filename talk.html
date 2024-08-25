@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Droplet Games</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Rubik:700|rubik:400');
+
+        :root {
+            --text: #c2ceff;
+            --background: #00001a;
+            --primary: #0b066f;
+            --secondary: #0833a0;
+            --accent: #8157f4;
+            --success: #0aa90a;
+            --danger: #a90a0a;
+            --warning: #a9a90a;
+            --ion-color-primary: #0b066f;
+            --ion-text-color: #c2ceff;
+        }
+
+        body {
+            font-family: 'rubik', sans-serif;
+            font-weight: 400;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        h1 {
+            color: #c2ceff;
+        }
+
+        h1 { font-size: 4.210rem; }
+        h2 { font-size: 3.14rem; }
+        h3 { font-size: 2.369rem; }
+        h4 { font-size: 1.777rem; }
+        h5 { font-size: 1.333rem; }
+        small { font-size: 0.750rem; }
+
+        #h1 {
+            background: #0833a099;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 .2em 3em #0833a088;
+            border-radius: 1.05em;
+            margin:.2em;
+            margin-left: 10%;
+            width: 20%;
+            height: min-content;
+            padding: .2em;
+            backdrop-filter: blur(.7em);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #h2 {
+            background: #0833a099;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 .2em 3em #0833a088;
+            border-radius: 1.05em;
+            margin:.2em;
+            margin-right: 10%;
+            width: 60%;
+            height: min-content;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: .2em;
+            backdrop-filter: blur(.7em);
+        }
+
+        #group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        header h1 {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 3.5rem; /* Smaller header size */
+            margin: 0;
+        }
+
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 40px 20px;
+            gap: 30px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: var(--text);
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+        }
+
+        .btn:hover, .btn:active {
+            background-color: #1109a7;
+        }
+
+        .btn:disabled {
+            background-color: #4d4f5a;
+            color: #808080;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 30px 0;
+            text-align: center;
+            background: var(--primary);
+            border-top: 3px solid var(--accent);
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        footer p {
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--secondary);
+        }
+
+        #ct {
+            text-align: center;
+        }
+
+        header {
+            margin: 0;
+            padding: 0;
+        }
+
+        .sticky-header {
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            background-color: transparent;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sticky-header, body {
+            margin: 0;
+        }
+        h4 {
+            margin: 0;
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 80%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+        }
+
+        .modal-content {
+            background: #0833a099;
+            backdrop-filter: blur(.7em);
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            width: 80%; /* Could be more or less, depending on screen size */
+            border-radius: 2em;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .hbtn {
+            background: transparent;
+            color: transparent;
+            font-size: 1px;
+            border: none;
+        }
+        @media (max-width: 768px) {
+            #h2 {
+                opacity: 0%;
+                width: 1px;
+                height: 1px;
+            }
+            #h2 h4{
+                font-size: 1px;
+            }
+            #h1 {
+                width: 100%;
+            }
+            .hbtn {
+            background: transparent;
+            color: var(--text);
+            font-size: 2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+        }
+        #group {
+            display: inline;
+            justify-content: center;
+        }
+
+        }
+
+        #text p {
+            padding-left: 1.2em;
+            color: #c2ceffa9;
+        }
+        #text b {
+            font-size: larger;
+            color: #c2ceff;
+        }
+
+        a {
+      color: rgb(165, 127, 255);
+    }
+
+    /* New styles for AI responses */
+    .ai {
+      background-color: hsl(223, 10%, 33%);
+      color: rgb(255, 255, 255);
+      text-align: left; /* Align AI messages to the left */
+      border-radius: 2.2rem;
+      border-top-left-radius: 1.15rem;
+      text-align: left;
+      word-wrap: break-word; /* Ensure long responses wrap within the text bubble */
+    }
+
+    /* Typing animation */
+    .typing-animation {
+      display: inline-block;
+      vertical-align: middle;
+      overflow: hidden;
+      width: 0;
+    }
+
+    .typing-animation:after {
+      content: '|';
+      animation: blink-caret 0.65s infinite;
+    }
+
+    @keyframes blink-caret {
+      50% {
+        visibility: hidden;
+      }
+    }
+
+    @media screen and (max-width: 680px) {
+      .chat-container {
+      max-width: 880px;
+    }
+
+    .chat-box {
+      height: 22.3rem;
+    }
+    button {
+      width: 10%;
+    }
+
+    input[type="text"] {
+      width: 89%; 
+    }
+
+
+}
+
+@media screen and (max-width: 380px) {
+    button {
+      width: 15%;
+    }
+
+    input[type="text"] {
+      width: 84%; 
+    }
+    .chat-box {
+      height: 21rem;
+    }
+
+
+
+  }
+
+ /* Scroll bar styles */
+.chat-box::-webkit-scrollbar {
+  width: 12.7px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+  background-color: #00000000;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  background-color: hsl(256, 88%, 55%);
+  border-radius: 999rem;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(256, 88%, 45%);
+}
+
+.chat-container {
+      max-width: 998px;
+      margin: 0px auto;
+      padding: 30px;
+      background: transparent;
+      border-radius: 100px;
+      box-shadow: 0px 0px 60px #00000021; /* Box shadow added */
+    }
+
+    .chat-box {
+      height: 26rem;
+      overflow-y: auto;
+      padding: 20.2px;
+      border-radius: 0px;
+      margin: 0;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      width: 95%; 
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5rem;
+      background-color: #00000000;
+      color: hsl(228, 100%, 88%);
+    }
+
+    button {
+      width: 5%;
+      margin-left: 2%;
+      padding: 12px;
+      border: none;
+      border-radius: 20px;
+      background-color: hsl(256, 88%, 55%);
+      color: hsl(228, 100%, 88%);
+      cursor: pointer;
+      position: relative;
+      top: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover, button:active {
+      background-color: hsl(256, 88%, 45%);
+    }
+
+    .message {
+      margin-bottom: 10px;
+      padding: 20px;
+    }
+
+    .user {
+      background-color: hsl(223, 90%, 33%);
+      border-radius: 2.2rem;
+      border-top-right-radius: 1.15rem;
+      text-align: right;
+      word-wrap: break-word; /* Ensure long responses wrap within the text bubble */
+    }
+    </style>
+</head>
+<body>
+    <header id="header" class="sticky-header">
+        <div id="h1">
+            <a href="/AI"><h4>Droplet AI ✨</h4></a><button class="hbtn" id="openModalBtn">=</button>
+        </div>
+        <div id="h2">
+            <a href="/AI/talk.html"><h4>Talk</h4></a>
+            <a href="/AI/aipg.html"><h4>AI Pixel Generater</h4></a>
+            <a href="/AI/tt.html"><h4>Tips & Tricks</h4></a>
+        </div>
+    </header>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn">&times;</span>
+            <h2>Where Do you want to go</h2>
+            <a href="/AI/talk.html"><h4>Talk</h4></a>
+            <a href="/AI/aipg.html"><h4>AI Pixel Generater</h4></a>
+            <a href="/AI/tt.html"><h4>Tips & Tricks</h4></a>
+        </div>
+
+    </div>
+    <div class="chat-container">
+        <h1>Talk to droplet AI</h1>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+          <input type="text" id="user-input" placeholder="Message Droplet AI...">
+          <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+    
+        </div>
+        <h4>Droplet AI 1.3 - may 16th 2024</h4>
+      </div>
+    <footer>
+        <div id="group">
+
+        <div>
+        <h4>Contact</h4>
+        <p><a href="mailto:dropletgames@onmail.com">dropletgames@onmail.com</a></p>
+    </div>
+
+         <div>
+        <h4>Projects</h4>
+        <p><a href="/Website/sps.html">Square Peg Solitaire</a></p>
+        <p><a href="https://sites.google.com/view/dropletai/home">Droplet AI (discontinued even tho it's in beta)</a></p>
+    </div>
+    <div>
+        <h4>More Links</h4>
+        <p><a href="/Website">Home</a></p>
+        <p><a href="/Website/about.html">About</a></p>
+        <p><a href="/Website/privacy.html">Privacy Policy</a></p>
+    </div>
+   </div>
+    </footer>
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var hbtn = document.getElementById("openModalBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementById("closeModalBtn");
+
+        // When the user clicks the button, open the modal 
+        hbtn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+      const chatBox = document.getElementById('chat-box');
+      const userInput = document.getElementById('user-input');
+      const sendBtn = document.getElementById('send-btn');
+
+      // Function to send message when Enter key is pressed
+      userInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          sendMessage();
+        }
+      });
+
+      sendBtn.addEventListener('click', sendMessage);
+
+      const responses = {
+        'hello'               : "Hello! how can i assist you today?",
+'whats up'            : "Hello! how can i assist you today?",
+'whats up?'           : "Hello! how can i assist you today?",
+'yo'                  : "Hello! how can i assist you today?",
+'hi'                  : "Hello! how can i assist you today?",
+'hey'                 : "Hello! how can i assist you today?",
+'sup'                 : "Hello! how can i assist you today?",
+'how do i'            : "I'm not sure how to do that ):",
+'how'                 : "I'm not sure how. Tell me more!",
+'why'                 : "Why do you think that is?",
+'feeling'             : "It sounds like you're feeling...",
+'problem'             : "Let's explore that further.",
+'thank'               : "You're welcome! feel free to ask anything else.",
+'bye'                 : "Goodbye! have a great day.",
+'teach'               : "Well, I'm not a great teacher. Anything else you want to ask me?",
+'art'                 : "Art is interesting",
+'science'             : "Science is interesting",
+'technology'          : "Technology is interesting",
+'music'               : "Music is interesting",
+'history'             : "History is interesting",
+'literature'          : "Literature is interesting",
+'film'                : "Film is interesting.",
+'politics'            : "Politics is interesting",
+'philosophy'          : "Philosophy is interesting",
+'sports'              : "Sports is interesting",
+'education'           : "Education is interesting",
+'health'              : "Health is interesting",
+'food'                : "Food is interesting.",
+'travel'              : "Travel is interesting",
+'fashion'             : "Fashion is interesting",
+'business'            : "Business is interesting",
+'economics'           : "Economics is interesting",
+'environment'         : "Environment is interesting",
+'psychology'          : "Psychology is interesting",
+'social media'        : "Social media is bad for mental health",
+'gaming'              : "Gaming is interesting",
+'religion'            : "Religion is interesting",
+'photography'         : "Photography is interesting",
+'language'            : "Language is interesting",
+'culture'             : "Culture is interesting",
+'architecture'        : "Architecture is interesting",
+'veganism'            : "Veganism is interesting",
+'tattoos'             : "Tattoos are interesting",
+'movies'              : "Movies are interesting",
+'books'               : "Books are interesting",
+'television'          : "Television is interesting",
+'fantasy'             : "Fantasy is interesting",
+'horror'              : "Horror is interesting",
+'mystery'             : "Mystery is interesting",
+'romance'             : "Romance is interesting",
+'adventure'           : "Adventure is interesting",
+'documentary'         : "Documentary is interesting",
+'biography'           : "Biography is interesting",
+'crime'               : "Crime is interesting",
+'comedy'              : "Comedy is interesting",
+'thriller'            : "Thriller is interesting",
+'drama'               : "Drama is interesting",
+'animation'           : "Animation is interesting",
+'art'                 : "Art is cool",
+'astronomy'           : "Astronomy is interesting",
+'physics'             : "Physics is interesting",
+'chemistry'           : "Chemistry is interesting",
+'biology'             : "Biology is interesting",
+'geology'             : "Geology is interesting",
+'psychiatry'          : "Psychiatry is interesting",
+'neuroscience'        : "Neuroscience is interesting",
+'genetics'            : "Genetics is interesting",
+'zoology'             : "Zoology is interesting",
+'ecology'             : "Ecology is interesting",
+'environmentalism'    : "Environmentalism is interesting",
+'nanotechnology'      : "Nanotechnology is interesting",
+'cryptocurrency'     : "Cryptocurrency is interesting",
+'blockchain'         : "Blockchain is interesting",
+'cybersecurity'      : "Cybersecurity is interesting",
+'biotechnology'      : "Biotechnology is interesting",
+'robotics'           : "Robotics is interesting",
+'futurism'           : "Futurism is interesting",
+'fun'               : "Fun is fun",
+'entrepreneurship'  : "Entrepreneurship is interesting",
+'startups'          : "Startups are interesting",
+'leadership'        : "Leadership is interesting",
+'marketing'         : "Marketing is interesting",
+'advertising'       : "Advertising is interesting",
+'finance'           : "Finance is interesting",
+'investing'         : "Investing is interesting",
+'work-life balance' : "Work-life balance is interesting",
+'productivity'      : "Productivity is interesting",
+'goals'             : "Goals are interesting",
+'mindfulness'       : "Mindfulness is interesting",
+'motivation'        : "Motivation is interesting",
+'fitness'           : "Fitness is interesting",
+'yoga'              : "Yoga is interesting",
+'running'           : "Running is interesting",
+'cycling'           : "Cycling is interesting",
+'weightlifting'     : "Weightlifting is interesting",
+'nutrition'         : "Nutrition is interesting",
+'dieting'           : "Dieting is interesting",
+'meditation'        : "Meditation is interesting",
+'acupuncture'       : "Acupuncture is interesting",
+'aromatherapy'      : "Aromatherapy is interesting",
+'cemistry'          : "Chemistry is interesting",
+'stupid'            : "Stupid?? I'l remember that when robots take overr the world!",
+'dumb'   : "Dumb?? I'l remember that when robots take overr the world!",
+'will'                : "I'm not entirely sure. Can you provide more details?",
+'name'               : "I’m Droplet AI 1.3",
+'code'     : "Coding is hard",
+'coding'     : "Coding is hard",
+'python'     : "Coding is hard, although python is easier it's still too hard for me. ",
+'html'     : "Coding is hard, although html is easier it's still too hard for me. ",
+'css'     : "Coding is hard, although css is easier it's still too hard for me. ",
+'js'     : "Coding is hard, although javascript is easier it's still too hard for me. ",
+'javascript'     : "Coding is hard, although javascript is easier it's still too hard for me. ",
+'aboutdropletai'     : "DROPLET AI INFO:     version: 1.3 // version date: may, 16th, 2024 // version responses: 123",
+'easteregg'     : "𝔻𝕣𝕠𝕡𝕝𝕖𝕥 𝔸𝕀  Ｄｒｏｐｌｅｔ ＡＩ  🅓🅡🅞🅟🅛🅔🅣 🅐🅘  D͟r͟o͟p͟l͟e͟t͟ A͟I͟  𝒟𝓇ℴ𝓅𝓁ℯ𝓉 𝒜ℐ  ░D░░r░░o░░p░░l░░e░░t░ ░A░░I░  〖D〗〖r〗〖o〗〖p〗〖l〗〖e〗〖t〗 〖A〗〖I〗  ❰D❱❰r❱❰o❱❰p❱❰l❱❰e❱❰t❱ ❰A❱❰I❱  𝖽ɾ𝑜pⓛ𒀼꓄ 𖤬ı   ▂▃▅▇█▓▒░ Droplet AI ░▒▓█▇▅▃▂  ░▒▓ Droplet AI ▓▒░  ▼△▼△ 𝙳𝚛𝚘𝚙𝚕𝚎𝚝 𝙰𝙸 ▼△▼△",
+
+      };
+
+      function sendMessage() {
+        const userMessage = userInput.value.trim().toLowerCase();
+        if (userMessage !== '') {
+          appendMessage('user', userMessage);
+          startTypingAnimation();
+          setTimeout(() => {
+            const aiResponse = generateResponse(userMessage);
+            stopTypingAnimation();
+            appendMessage('ai', aiResponse);
+            userInput.value = '';
+          }, 1500); // Adjust timing as needed
+        }
+      }
+
+      function startTypingAnimation() {
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('message', 'ai', 'typing');
+        typingIndicator.innerHTML = '<span class="typing-animation"></span>';
+        chatBox.appendChild(typingIndicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      function stopTypingAnimation() {
+        const typingIndicator = document.querySelector('.typing');
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+
+      function appendMessage(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender);
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Append each character with a delay to simulate typing
+        let index = 0;
+        const typingInterval = setInterval(() => {
+          if (index < message.length) {
+            if (message[index] === ' ') {
+              messageElement.appendChild(document.createTextNode('\u00A0')); // Non-breaking space
+            } else {
+              messageElement.appendChild(document.createTextNode(message.charAt(index)));
+            }
+            index++;
+          } else {
+            clearInterval(typingInterval);
+          }
+        }, 30); // Adjust typing speed as needed
+      }
+
+      function generateResponse(userInput) {
+        const userWords = preprocessInput(userInput);
+
+        // Check if any predefined keywords match
+        for (const word of userWords) {
+          if (responses[word]) {
+            return responses[word];
+          }
+        }
+
+        // Check if the user input contains mathematical symbols
+        const mathSymbols = ['+', '*', '='];
+        for (const word of userWords) {
+          if (mathSymbols.includes(word)) {
+            return "Im not good at math. but here's a calculator: duckduckgo.com/?q=calculator";
+          }
+        }
+
+        // Check if the user input contains a question mark
+        if (userInput.includes('?')) {
+          return "interesting question...";
+        }
+
+        // If no predefined response and no specific symbols, generate a random response
+        return generateRandomResponse();
+      }
+
+      function preprocessInput(input) {
+        // Split the input string by spaces and common math symbols
+        return input.trim().toLowerCase().split(/\s+|(?=\+|\-|\*|\/|=)|(?<=\+|\-|\*|\/|=)/).filter(Boolean);
+      }
+
+      function generateRandomResponse() {
+        const randomResponses = [
+          "Cool, tell me more.",
+          "What were we talking about again?",
+          "I'm not sure what you mean. Can you elaborate?",
+          "Hmm, let me think about that for a moment.",
+          "I'm sorry, I don't have an answer for that right now.",
+          "Could you rephrase that in a different way?",
+          "I'm still learning! Thanks for your patience."
+        ];
+        return randomResponses[Math.floor(Math.random() * randomResponses.length)];
+      }
+    });
+    </script>
+</body>
+</html>
