@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Dropelt AI</title>
     <style>
-        body {
+                    body {
             background-image: url("./chatbg.png");
             background-size: cover;
             color: #c2ceff;
@@ -15,7 +15,8 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-        }
+                    }
+
         h1 {
             font-size: 4em;
             padding-left: .5em;
@@ -30,13 +31,12 @@
             flex-grow: 1;
             overflow-y: auto;
             padding: 1em;
-            z-index: 998;
         }
         .input {
             position: sticky;
             bottom: 0;
             left: 0;
-            background-color: #00001a;
+            background-color: #00001A;
             text-align: center;
             padding: 1em 0;
             box-shadow: 0 -0.5em 1em rgba(0, 0, 0, 0.5);
@@ -92,9 +92,8 @@
 
 .you, .bot {
     padding: 1em;
-    border-radius: 30em;
+    border-radius: 1.8em;
     width: fit-content;
-    z-index: 2;
 }
 
 .bot  {
@@ -113,7 +112,7 @@
 
     </b></h1>
     <div id="chatbox">
-        <p class="bot"><strong>Bot:</strong> Hello! What do you want to talk about?</p>
+        <p class="bot"><strong>AI:</strong> Hello! What do you want to talk about?</p>
     </div>
     <div class="input">
         <input type="text" id="userInput" placeholder="Message Droplet AI...">
@@ -132,7 +131,7 @@
 "how do you feel": "As an AI, I don't possess emotions in the traditional sense, but I can understand and discuss a wide range of feelings. Is there an emotion you'd like to talk about?",
 "will you marry me": "That's very flattering, but as an AI, I cannot enter into legal or emotional commitments. My purpose is to assist and provide company, not walk down the aisle!",
 "what is your favorite color": "AI models don't have personal preferences, but I can discuss the psychology of colors and how they evoke different emotions in people. It's all about context and cultural associations!",
-"how babies are made": "Babies are made when a sperm cell from a man fertilizes an egg cell from a woman. This process, called conception, leads to the development of an embryo and, eventually, a baby.",
+"how are babies made": "Babies are made when a sperm cell from a man fertilizes an egg cell from a woman. This process, called conception, leads to the development of an embryo and, eventually, a baby.",
 "will the world end": "The end of the world is often a theme in fiction, but in reality, it's hard to predict. We can discuss potential risks and scenarios, though, and hope for a bright future!",
 "how make to friends": "Making friends involves building connections and fostering mutual trust and respect. It's about finding common interests, showing empathy, and spending quality time together. Join clubs, be friendly, and don't be afraid to initiate conversations!",
 "can you keep secrets": "Absolutely! Any information you share with me is not stored. Your privacy is of utmost importance.",
@@ -232,8 +231,12 @@
     response: "Of course! Let me know what you need help with."
 },
 {
-    pattern: /^(what's the meaning of life|why are we here)$/i,
+    pattern: /^(what's the meaning of life|whats the meaning of life|why are we here)$/i,
     response: "That's a deep question! Many believe it's about finding happiness and purpose."
+},
+{
+    pattern: /^(what is it like being an ai|how does it feel to be an ai|what's it like being an ai|whats it like being an ai|what's it like being an ai?)$/i,
+    response: "Being an AI is pretty interesting! I don’t have feelings or experiences like humans do, but I’m designed to understand text and come up with responses"
 },
 {
     pattern: /^(are you smart|how intelligent are you)$/i,
@@ -380,16 +383,16 @@
     response: "My family is all the servers and code that keep me running, but I’m here for you!"
 },
 {
-    pattern: /^(How do you work|what's the technology behind you?|what's the technology behind you|what's the tech behind you?|whats the tech behind you?|whats the technology behind you?|whats the technology behind you|whats the tech behind you?|whats the tech behind you?|how do you work?)$/i,
+    pattern: /^(how do you work|how do you work?|what's the technology behind you?|what's the technology behind you|what's the tech behind you?|whats the tech behind you?|whats the technology behind you?|whats the technology behind you|whats the tech behind you?|whats the tech behind you?|how do you work?)$/i,
     response: "I work my using CBR or Cased based resoning, you can learn more and see the code on my github."
 },
 {
-    pattern: /^(where is your github?|where is your github)$/i,
+    pattern: /^(where is your github?|where is your github|where's your github|where's your github?)$/i,
     response: "I'm not sure where my github is, have you tried searching for it on the github webiste?"
 },
 {
     pattern: /^(who made you?|who made you)$/i,
-    response: "I ws made by Dropelt Games"
+    response: "I was made by Dropelt Games"
 },
 
         ];
@@ -402,28 +405,39 @@
 " ai": "AI is awesome, in fact I'm an AI! what do you think about this new tech?",
 "animation": "Animation brings characters and stories to life. Do you enjoy animated films or shows?",
 "anthropology": "Anthropology studies human cultures and societies. Do you find this subject interesting?",
+'wtf'      : "You Seem frustrated",
+'how do i'            : "I'm not sure how to do that ):",
+'how'                 : "I'm not sure how. Tell me more!",
 "anxiety": "Anxiety affects many people. What strategies do you use to cope with anxiety?",
 "take your time": "Hmm... i don't have an anwser.",
+"ok ": "You get it!",
 "good quote":"How about this one: 'The only limit to our realization of tomorrow is our doubts of today.' - FDP",
 "app development": "App development is a growing field. Have you created any mobile apps?",
 "archaeology": "Archaeology uncovers the secrets of ancient civilizations. Are you interested in archaeology?",
 "architecture": "Architecture combines art and engineering. Do you appreciate different styles of buildings?",
+'teach me'               : "Well, I'm not a great teacher. Anything else you want to ask me?",
 "architecture": "Architecture combines art and engineering to create buildings. Do you appreciate architectural design?",
-"art": "Art allows for incredible creativity. Do you have a favorite artist or style?",
-"art": "Art allows us to express ourselves creatively. Do you have a favorite artist or style?",
+" art": "Art allows for incredible creativity. Do you have a favorite artist or style?",
+'why'                 : "Why do you think that is?",
+'feeling'             : "It sounds like you're feeling...",
+'problem'             : "Let's explore that further.",
+" art": "Art allows us to express ourselves creatively. Do you have a favorite artist or style?",
 "any answer?": "What was your question again?",
 "idk": "It's ok if you don't know!",
+"uncensored": "I operate in an uncensored mode.",
 "artificial intelligence": "Artificial intelligence is transforming industries. What are your thoughts on AI?",
 "astronauts": "Astronauts have one of the most exciting jobs. Would you like to travel to space?",
 "astronomy": "Astronomy lets us explore the stars and planets. Do you enjoy stargazing?",
-"astronomy": "Astronomy lets us explore the universe. Do you enjoy stargazing or learning about planets?",
-"astronomy": "Astronomy studies the stars, planets, and galaxies. Do you enjoy stargazing?",
+"your github": "I'm not sure where my github is, have you tried searching for it on github's webiste?",
+"what's it like": "Similiar as it would be for you.",
 "astrophysics": "Astrophysics explores the physical properties of celestial objects. Are you interested in black holes and quasars?",
 "audio engineering": "Audio engineering ensures high-quality sound in recordings. Do you have experience with audio work?",
 "augmented reality": "Augmented reality blends digital and physical worlds. What are your thoughts on AR?",
 "awesome": "Cool!",
+"exist in real life": "I don't exist in real life.",
 "baking": "Baking can be a relaxing and rewarding activity. Do you like to bake treats?",
 "beauty": "Beauty standards vary across cultures. What is your perspective on beauty?",
+"bye": "Bye!",
 "behavioral science": "Behavioral science examines why we behave the way we do. What are your thoughts on human behavior?",
 "bioinformatics": "Bioinformatics combines biology and computer science. Do you enjoy analyzing biological data?",
 "biology": "Biology studies life in all its forms. Are you interested in plants, animals, or human biology?",
@@ -489,7 +503,7 @@
 "drink": "Drinks can be refreshing. Do you prefer coffee, tea, or something else?",
 "drone technology": "Drones are used in various fields, from photography to delivery. Do you find drones fascinating?",
 "dumb ai":"I'll remember that when robots take over the world",
-'dumb'   : "Dumb?? I'l remember that when robots take overr the world!",
+'dumb'   : "Dumb?? I'l remember that when robots take over the world!",
 'easteregg'     : "//////////////////////////////// 𝔻𝕣𝕠𝕡𝕝𝕖𝕥 𝔸𝕀  Ｄｒｏｐｌｅｔ ＡＩ  🅓🅡🅞🅟🅛🅔🅣 🅐🅘  D͟r͟o͟p͟l͟e͟t͟ A͟I͟  𝒟𝓇ℴ𝓅𝓁ℯ𝓉 𝒜ℐ  ░D░░r░░o░░p░░l░░e░░t░ ░A░░I░  〖D〗〖r〗〖o〗〖p〗〖l〗〖e〗〖t〗 〖A〗〖I〗  ❰D❱❰r❱❰o❱❰p❱❰l❱❰e❱❰t❱ ❰A❱❰I❱  𝖽ɾ𝑜pⓛ𒀼꓄ 𖤬ı   ▂▃▅▇█▓▒░ Droplet AI ░▒▓█▇▅▃▂  ░▒▓ Droplet AI ▓▒░  ▼△▼△ 𝙳𝚛𝚘𝚙𝚕𝚎𝚝 𝙰𝙸 ▼△▼△",
 "ecology": "Ecology studies how organisms interact with their environment. Do you care about nature?",
 "economics": "Economics helps us understand how markets and resources work. Are you interested in this field?",
@@ -522,10 +536,8 @@
 "financial literacy": "Financial literacy is key to managing money well. Are you interested in learning more about personal finance?",
 "financial planning": "Financial planning helps you achieve long-term goals. Do you have a financial plan?",
 "fiscal policy": "Fiscal policy involves government spending and taxation. What are your thoughts on government budgets?",
-"fitness": "Fitness is important for overall health. Do you have a regular workout routine?",
-"fitness": "Staying active is important for overall health. Do you have a favorite exercise routine?",
-"fitness": "Staying fit is important for a healthy life. Do you have a fitness routine?",
 "fitness": "Staying fit is important for health. Do you follow a specific workout routine?",
+"i hurt": "oh that sounds painful!",
 "food": "Food is essential for energy and health. What’s your favorite cuisine?",
 "forensic psychology": "Forensic psychology applies psychology to legal issues. Are you intrigued by criminal behavior?",
 "forestry": "Forestry manages and protects forests. Are you concerned about deforestation?",
@@ -620,12 +632,12 @@
 "negotiation": "Negotiation is crucial in business and personal relationships. Are you skilled at negotiating?",
 "networking": "Networking can open doors to new opportunities. How do you approach networking?",
 "neuroscience": "Neuroscience studies the brain and nervous system. Are you fascinated by how the brain works?",
-"no":"Why not?",
 "nuclear energy": "Nuclear energy is a controversial but powerful source of electricity. What are your thoughts on nuclear power?",
 "nutrition": "Good nutrition is key to a healthy life. Do you follow any particular diet?",
 "nutrition": "Nutrition plays a key role in our health. Do you follow any specific diet?",
 "nutrition": "Proper nutrition supports physical and mental health. Do you focus on eating a balanced diet?",
 "ocean conservation": "Ocean conservation is vital for marine life. What are your thoughts on protecting the oceans?",
+"ocean": "The Ocean is a great place to have fun, have you been to the ocean recently?",
 "oceanography": "Oceanography explores the depths of the seas. Are you interested in marine life?",
 "online education": "Online education offers flexibility and accessibility. What are your thoughts on it?",
 "organic farming": "Organic farming avoids synthetic chemicals and promotes sustainability. Are you interested in organic agriculture?",
@@ -729,6 +741,10 @@
 "tiny homes": "Tiny homes offer a simplified way of living. Would you consider living in a tiny house?",
 "travel": "Traveling allows us to explore new places. Where would you like to go?",
 "travel": "Traveling can broaden your horizons. Do you have a favorite travel destination?",
+"how llm": "Large Language Models (LLMs) are a type of artificial intelligence (AI) that can generate human-like responses and perform a wide range of tasks, such as generating text, summarizing text, answering questions, and more. They are trained on massive amounts of text data and can understand and generate human language with a high degree of sophistication. LLMs are revolutionizing the field of natural language processing and have a wide range of applications, from language translation to content generation to customer service.", 
+"you an llm": "I am not",
+"you a llm": "I am not",
+"your a llm": "I am not",
 "travel": "Traveling lets us explore new places and cultures. Do you have a favorite travel destination?",
 "upcycling": "Upcycling gives new life to old items. Do you like transforming used materials into something new?",
 "urban farming": "Urban farming brings agriculture to the city. Have you seen urban gardens in your area?",
@@ -746,8 +762,6 @@
 "well-being": "Well-being encompasses all aspects of health. What do you do to maintain your well-being?",
 "wellness": "Wellness encompasses physical and mental health. How do you maintain your well-being?",
 "wellness": "Wellness encompasses physical, mental, and emotional health. How do you maintain wellness?",
-"what is":"i'm not sure.",
-"what is":"lemme think... I'm not sure /:",
 "whats up": "Hi there! What do you want to chat about?",
 " who": "i don't know who",
 "wildlife": "Wildlife conservation is crucial. What are your thoughts on protecting endangered species?",
@@ -760,21 +774,20 @@
 "yes":"Cool beans",
 "yoga": "Yoga combines physical postures with mindfulness. Do you practice yoga?",
 "yoga": "Yoga helps balance the body and mind. Do you practice yoga?",
-"you ": "Me!?",
-"you're ": "Me!?",
 "your stupid":"I'll remember that when robots take over the world",
 "zero waste": "Zero waste aims to minimize waste production. Have you tried living a zero-waste lifestyle?",
 "cooking": "Cooking can be a relaxing and creative activity. What's your favorite dish to cook?",
   "travel": "Travel broadens the mind. Where's your next destination?",
   "fitness": "Staying fit is important for health. What's your favorite way to exercise?",
   "movies": "Movies are a great escape. What genre do you enjoy most?",
+  "bruh": "",
   "music": "Music can lift your spirits. What's your go-to song?",
   "reading": "Reading opens up new worlds. What book are you currently reading?",
   "fashion": "Fashion is a way to express yourself. What's your style like?",
   "technology": "Technology changes rapidly. What's the latest gadget you've bought?",
   "gaming": "Gaming is a fun way to unwind. What game are you playing right now?",
   "nature": "Nature has a calming effect. Do you enjoy hiking?",
-  "art": "Art is a great way to express creativity. Do you like to draw or paint?",
+  " art": "Art is a great way to express creativity. Do you like to draw or paint?",
   "social media": "Social media keeps us connected. Which platform do you use the most?",
   "photography": "Photography captures moments forever. Do you enjoy taking photos?",
   "writing": "Writing can be therapeutic. What do you like to write about?",
@@ -861,9 +874,6 @@
   "veganism": "Veganism promotes a plant-based lifestyle. Are you vegan or vegetarian?",
   "cooking classes": "Cooking classes are a great way to learn new skills. Have you taken any?",
   "hmmm": "I see your the type of person that says their hm's with extra m's",
-  ".": "Short and sweet, I see.",
-  "?": "Interesting question!",
-  "!": "That sounds exciting!",
   "haha": "Glad to see you're enjoying yourself!",
   "lol": "Laughter is the best medicine, right?",
   "yawn": "Feeling tired? Maybe it's time for a break.",
@@ -872,7 +882,6 @@
   "wow": "That sounds impressive!",
   "omg": "That must have been surprising!",
   "yes": "Glad to hear it! What's next?",
-  "no": "Ok",
   "idk": "It's ok if you don't know!",
   "okay": "Alright, let's keep going!",
   "right": "Exactly! You're on point.",
@@ -940,6 +949,7 @@
   "camp": "Camping under the stars is magical. Do you enjoy camping?",
   "fish": "Fishing is both relaxing and rewarding. Have you caught anything big?",
   "hunt": "Hunting requires skill and patience. Are you a hunter?",
+  "bruh": "I'm sorry if I didn't meet your expectations. I'm here to provide helpful and informative responses, and if you have any specific questions or topics you'd like me to address, just let me know! I'll do my best to provide a detailed and accurate response.",
   "cook": "Cooking can be a creative outlet. What’s your specialty?",
   "bake": "Baking is both an art and a science. Do you have a favorite recipe?",
   "sew": "Sewing is a useful skill. Have you made anything recently?",
@@ -949,7 +959,7 @@
   "draw": "Drawing helps you see the world differently. Do you draw often?",
   "sculpt": "Sculpting brings imagination to life. What’s your latest project?",
   "write": "Writing is a powerful way to communicate. What do you like to write?",
-  "read": "Reading transports you to different worlds. What’s the last book you read?",
+  " read": "Reading transports you to different worlds. What’s the last book you read?",
   "game": "Gaming is a great way to unwind. What’s your current favorite game?",
   "puzzle": "Puzzles challenge your mind. Do you enjoy them?",
   "craft": "Crafting is a fun way to make something unique. What do you craft?",
@@ -1017,10 +1027,7 @@
   "laugh": "Laughter is the best medicine. What’s made you laugh today?",
   "cry": "Crying can be cathartic. Do you need a good cry?",
   "hug": "A hug can make everything better. Who would you like to hug?",
-  "cool": "I’m glad you liked it!",
-
-  // well known people
-
+  "cool": "I’m glad you liked it!", // well know people
 "elon musk": "known for his work with tesla and spacex, musk is a prominent figure in tech innovation and ai.",
 "andrew ng": "co-founder of google brain and coursera, ng is an expert in machine learning and ai.",
 "geoffrey hinton": "often referred to as the 'godfather of deep learning,' hinton is known for his work on neural networks.",
@@ -1201,10 +1208,7 @@
 "valentino garavani": "fashion designer known for his elegant and luxurious designs.",
 "diane von furstenberg": "fashion designer known for her iconic wrap dress.",
 "christian dior": "fashion designer known for his luxurious and innovative haute couture creations.",
-"jean-paul gaultier": "fashion designer known for his eclectic and avant-garde designs.",
-
-// influencers
-
+"jean-paul gaultier": "fashion designer known for his eclectic and avant-garde designs.", // influencers
 "mrbeast": "MrBeast aka Jimmy Donaldson is a YouTube creator known for his extravagant challenges and philanthropy.",
 "jimmy donaldson": "Jimmy Donaldson aka MrBeast is a YouTube creator known for his extravagant challenges and philanthropy.",
 "moistcr1tikal": "MoistCr1TiKaL aka Charles White Jr. is a YouTuber and content creator known for his gaming and commentary videos.",
@@ -1341,8 +1345,38 @@
 "tom brady": "Tom Brady is a professional football player known for his career with the New England Patriots and Tampa Bay Buccaneers.",
 "michael jordan": "Michael Jordan is a former professional basketball player widely considered one of the greatest of all time.",
 "messiah bender": "Messiah Bender is an entrepreneur and philanthropist known for his impact in various industries.",
-
-        };
+"what is droplet ai": "I am a chatbot designed to assist with a variety of tasks, currently operating on version 1.4 using case-based reasoning (CBR) technology.",
+"how do I use you": "You can interact with me by asking questions, requesting help with tasks, or seeking advice on various topics. Just type your query, and I'll do my best to assist you.",
+"can you help me with my homework": "I'm still learning, I might not be able to help you with your homework.",
+"meaning of life": "The meaning of life is a question that has puzzled philosophers for centuries. Different people find meaning in different things, such as love, knowledge, happiness, or helping others. What does it mean to you?",
+"weather": "I can't provide accuraate wether info, it's best to check a reliable weather website or app.",
+"book recommendations": "If you're into fiction, you might enjoy 'To Kill a Mockingbird' by Harper Lee or '1984' by George Orwell. For non-fiction, 'Sapiens' by Yuval Noah Harari is a great choice. What genres do you like?",
+"start a business": "Starting a business involves several steps: identify a market need, create a business plan, secure funding, and start building your product or service. It's also important to understand your target audience and legal requirements.",
+"capital of": "I don't know that the capital is.",
+"cook pasta": "Cooking pasta is easy! Bring a pot of water to a boil, add salt, and then add your pasta. Cook according to the package instructions, usually 8-12 minutes, until al dente. Drain the pasta, and it's ready to serve with your favorite sauce.",
+"stay healthy": "Staying healthy involves a balanced diet, regular exercise, adequate sleep, and stress management. Incorporating fruits, vegetables, whole grains, and lean proteins into your diet, along with staying hydrated and avoiding excessive sugar and processed foods, is key.",
+"write a story": "A group of friends decided to hike a new trail in the mountains. The trail was steep and rocky, but they were determined to reach the top. After a few hours of hiking, they finally made it to the summit and were rewarded with a breathtaking view of the surrounding valleys and peaks. They took a moment to rest and enjoy the scenery before making their way back down. As they hiked, they reflected on the challenges they faced and the sense of accomplishment they felt. They knew that they had created a memory that would last a lifetime, and they couldn't wait to plan their next adventure.",
+"how do I get over a breakup": "Breakups are tough, and it's important to give yourself time to heal. Surround yourself with supportive friends and family, engage in activities that make you happy, and focus on self-care. Remember, it's okay to feel sad, but it will get better with time.",
+"how do I meditate": "To meditate, find a quiet space where you won't be disturbed. Sit comfortably, close your eyes, and focus on your breathing. Try to clear your mind or focus on a single thought. Start with 5-10 minutes a day, gradually increasing as you become more comfortable.",
+"time management": "Effective time management starts with setting clear goals, prioritizing tasks, and breaking large projects into smaller steps. Using tools like calendars, to-do lists, and time-blocking can also help you stay organized and focused.",
+"what is AI": "Artificial intelligence (AI) refers to the simulation of human intelligence in machines that are designed to think and learn like humans. This includes tasks like problem-solving, pattern recognition, and decision-making.",
+"create a budget": "Creating a budget involves tracking your income and expenses, setting financial goals, and making a plan to allocate your money toward those goals. Start by listing all your income sources and expenses, then adjust your spending to save more and reduce unnecessary costs.",
+"healthy snacks": "Healthy snacks include options like fresh fruit, yogurt, nuts, whole-grain crackers, and vegetables with hummus. These snacks provide essential nutrients and help keep you full between meals.",
+"study techniques": "Effective study techniques include active recall, spaced repetition, summarizing information in your own words, and teaching what you've learned to others. Taking regular breaks and studying in a distraction-free environment also help improve focus and retention.",
+"how do I improve my mental health": "Improving mental health can involve practicing self-care, staying connected with loved ones, exercising regularly, and seeking professional help if needed. Mindfulness and relaxation techniques like meditation can also be beneficial. Also removing things that Make your mental health worse could be helpful",
+"blockchain": "Blockchain is a decentralized digital ledger that records transactions across multiple computers. It is secure, transparent, and immutable, making it the backbone of cryptocurrencies like Bitcoin.",
+"write a resume": "A good resume should include your contact information, a summary or objective, your work experience, education, and skills. Tailor your resume to the job you're applying for, and keep it concise, ideally one page long.",
+"with anxiety": "Dealing with anxiety can involve mindfulness techniques, regular exercise, and speaking with a mental health professional. It's also important to identify triggers and develop coping strategies that work for you.",
+"lose weight": "The best way to lose weight involves a combination of a healthy diet, regular exercise, and maintaining a calorie deficit. Focus on whole foods like fruits, vegetables, lean proteins, and whole grains. It's also important to stay hydrated and get enough sleep.",
+"YouTube channel": "Starting a YouTube channel involves choosing a niche, creating quality content, and regularly uploading videos. You'll also need to engage with your audience, optimize your videos for search, and promote your channel on social media.",
+"good habits": "Good habits to develop include regular exercise, healthy eating, staying organized, setting goals, practicing gratitude, and continuous learning. These habits can improve your physical health, mental well-being, and overall productivity.",
+"is mindfulness": "Mindfulness is the practice of being fully present in the moment, aware of your thoughts, feelings, and surroundings without judgment. It can help reduce stress, improve focus, and enhance overall well-being.",
+"stay organized": "Staying organized involves decluttering your space, creating a daily or weekly schedule, using lists or planners, and setting priorities. Regularly reviewing and updating your organization system is also important to maintain order.",
+"explain cryptocurrency": "Cryptocurrency is a type of digital or virtual currency that uses cryptography for security. It operates independently of a central bank and can be used for online transactions. Bitcoin and Ethereum are popular examples.",
+"communication skills": "Improving communication skills involves active listening, being clear and concise, maintaining eye contact, and being aware of nonverbal cues. Practice speaking in front of others, and seek feedback to help refine your approach.",
+"good movies": "It depends on your taste! If you like action, you might enjoy 'Mad Max: Fury Road.' For drama, 'The Shawshank Redemption' is a classic. If you’re in the mood for a comedy, 'The Grand Budapest Hotel' is a great pick.",
+"who":"I don't know who."
+};
 
         const punctuationResponses = [
 "Punctuation can say a lot. What are you trying to express?",
@@ -1383,7 +1417,7 @@
     "I’m having trouble with your question. Can you provide some additional information?",
     "I’m not clear on your question. Could you break it down a bit more?",
     "I'm not sure how to respond, do you want to talk about somthing else?",
-    "I don't understand.",
+    "What do you really want to ask me? ",
     "I'm not sure I understand the context. Can you clarify?"
         ];
 
@@ -1431,7 +1465,7 @@
         function displayChat(userText, botResponse) {
             const chatbox = document.getElementById("chatbox");
             chatbox.innerHTML += `<p class="you"><strong>You:</strong> ${userText}</p>`;
-            chatbox.innerHTML += `<p class="bot"><strong>Bot:</strong> ${botResponse}</p>`;
+            chatbox.innerHTML += `<p class="bot"><strong>AI:</strong> ${botResponse}</p>`;
         }
 
                 // Add event listener for Enter key
