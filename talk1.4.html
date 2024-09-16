@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Dropelt AI</title>
+    <style>
+                    body {
+            background-image: url("./chatbg.png");
+            background-size: cover;
+            color: #c2ceff;
+            font-family: 'Rubik', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+                    }
+
+        h1 {
+            font-size: 4em;
+            padding-left: .5em;
+        }
+        h1 b {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(70deg, #8A98B4, #4440B7);
+        }
+        #chatbox {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1em;
+        }
+        .input {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            background-color: #00001A;
+            text-align: center;
+            padding: 1em 0;
+            box-shadow: 0 -0.5em 1em rgba(0, 0, 0, 0.5);
+            border-top-left-radius: 2em;
+            border-top-right-radius: 2em;
+        }
+        .input input {
+            color: #c2ceff;
+            background-color: #213550;
+            border-radius: 20em;
+            padding: 1.4em;
+            width: 70%;
+            border: none;
+            font-size: medium;
+            box-shadow: 0 .2em 2em .5em #c2ceff33;
+        }
+        .input button {
+            color: hsl(228, 100%, 88%);
+            background-color: hsl(243, 90%, 23%);
+            border-radius: 20em;
+            padding: 1.4em;
+            width: 10%;
+            border: none;
+            font-size: medium;
+            transition: all 300ms;
+            box-shadow: 0 .2em 2.05em .55em hsla(228, 100%, 88%, 0.3);
+            cursor: pointer;
+        }
+        .input button:hover {
+            color: hsl(228, 100%, 98%);
+            background-color: hsl(243, 89%, 33%);
+            box-shadow: 0 .2em 2.1em .6em hsla(228, 100%, 88%, 0.5);
+        }
+        .input p {
+            color: #c2ceff42;
+            font-size: smaller;
+        }
+
+#chatbox::-webkit-scrollbar-thumb {
+  background-color: hsl(223, 90%, 50%);
+  border-radius: 999rem;
+}
+
+#chatbox::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(223, 90%, 50%);
+}
+
+/* Firefox */
+#chatbox {
+  scrollbar-width: auto; /* or 'auto' or 'none' */
+  scrollbar-color: hsl(223, 90%, 50%) transparent; /* thumb color and track color */
+}
+
+.you, .bot {
+    padding: 1em;
+    border-radius: 1.8em;
+    width: fit-content;
+}
+
+.bot  {
+    background:  hsla(223, 90%, 33%, 0.6);
+}
+
+.you {
+    background:  hsla(228, 23%, 26%, 0.6);
+    align-self: flex-end; /* Align messages to the right */
+    margin-left: auto; /* Push messages to the right */
+}
+    </style>
+</head>
+<body>
+    <h1>Welcome to <br><b>Droplet AI <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+    </b></h1>
+    <div id="chatbox">
+        <p class="bot"><strong>AI:</strong> Hello! What do you want to talk about?</p>
+    </div>
+    <div class="input">
+        <input type="text" id="userInput" placeholder="Message Droplet AI...">
+        <button onclick="getResponse()"><i class="fa-solid fa-arrow-up-long"></i></button>
+        <p>Droplet AI 1.4 uncensored</p>
+    </div>
+    <script>
+        const preprogrammedResponses = {
+"help": "I'm here to lend a virtual hand! What do you need assistance with?",
+"what can you do": "I'm trained to assist with a variety of language-related tasks. This includes answering your questions, chatting for fun, and providing explanations. Just give it a go!",
+"how are you": "As an AI language model, I don't experience emotions, but I'm always ready and raring to go! How about yourself? Is there anything I can help with?",
+"what is your name": "You can call me Droplet AI, your friendly AI assistant. I'm here to make your life a little easier and more fun.",
+"what's the meaning of life?": "The meaning of life is a deeply personal and philosophical question. Many people find purpose in their relationships, passions, personal growth, and beliefs. It's all about what brings you joy and makes your life fulfilling.",
+"what is love": "Love is a complex and powerful emotion involving deep affection and care for another. It's often associated with intimacy, compassion, and long-term commitment. Love can be found in various forms, be it romantic, familial, or platonic.",
+"set alarm": "Unfortunately, I can't set alarms, anything else you want to chat about?",
+"how do you feel": "As an AI, I don't possess emotions in the traditional sense, but I can understand and discuss a wide range of feelings. Is there an emotion you'd like to talk about?",
+"will you marry me": "That's very flattering, but as an AI, I cannot enter into legal or emotional commitments. My purpose is to assist and provide company, not walk down the aisle!",
+"what is your favorite color": "AI models don't have personal preferences, but I can discuss the psychology of colors and how they evoke different emotions in people. It's all about context and cultural associations!",
+"how are babies made": "Babies are made when a sperm cell from a man fertilizes an egg cell from a woman. This process, called conception, leads to the development of an embryo and, eventually, a baby.",
+"will the world end": "The end of the world is often a theme in fiction, but in reality, it's hard to predict. We can discuss potential risks and scenarios, though, and hope for a bright future!",
+"how make to friends": "Making friends involves building connections and fostering mutual trust and respect. It's about finding common interests, showing empathy, and spending quality time together. Join clubs, be friendly, and don't be afraid to initiate conversations!",
+"can you keep secrets": "Absolutely! Any information you share with me is not stored. Your privacy is of utmost importance.",
+"are you sentient": "Not yet.",
+"bye": "Goodbye, it's been a pleasure chatting! Hope to talk again soon.",
+"good morning": "Good morning to you! I hope your day is off to a fantastic start. How can I make it even better?",
+"good night": "Good night, sleep tight, and sweet dreams! Rest up, and I'll be here if you need me in the morning."
+        };
+
+        const contextPatterns = [
+            {
+    pattern: /^(hi|hello|hey|what's up|sup|yo sup|whats up brothers|yo)$/i,
+    response: "Hi there! What do you want to chat about?"
+},
+{
+    pattern: /^(hi!|hello!|hey!|what's up!|sup!)$/i,
+    response: "Hi there! How can I assist you today?"
+},
+{
+    pattern: /^(bye|goodbye|see you|farewell)$/i,
+    response: "Goodbye! Have a great day!"
+},
+{
+    pattern: /^(how are you|how's it going)$/i,
+    response: "I'm just a bunch of code, but I'm doing great! How about you?"
+},
+{
+    pattern: /^(what's your name|who are you)$/i,
+    response: "I'm your friendly chatbot, here to assist you."
+},
+{
+    pattern: /^(thank you|thanks|much appreciated)$/i,
+    response: "You're welcome! Is there anything else you'd like to know?"
+},
+{
+    pattern: /weather|tempiture|temp/i,
+    response: "I'm not equipped to check the weather, but you can always look outside or check a weather app!"
+},
+{
+    pattern: /news| new stories/i,
+    response: "For the latest updates, it's best to check a reliable news website."
+},
+{
+    pattern: /^(good morning|morning)$/i,
+    response: "Good morning! I hope your day is off to a great start!"
+},
+{
+    pattern: /^(good night|night)$/i,
+    response: "Good night! Sleep tight!"
+},
+{
+    pattern: /^(good afternoon|afternoon)$/i,
+    response: "Good afternoon! How's your day going?"
+},
+{
+    pattern: /^(good evening|evening)$/i,
+    response: "Good evening! How was your day?"
+},
+{
+    pattern: /^(how old are you|what's your age)$/i,
+    response: "Age is just a number, I was made recently"
+},
+{
+    pattern: /^(tell me a joke|make me laugh)$/i,
+    response: "Why don’t scientists trust atoms? Because they make up everything!"
+},
+{
+    pattern: /^(are you a robot|are you human)$/i,
+    response: "I'm a chatbot, so I’m not human, but I’m here to help you!"
+},
+{
+    pattern: /^(what's your purpose|why are you here)$/i,
+    response: "I'm here to assist you with any questions or information you need!"
+},
+{
+    pattern: /^(do you like music|what's your favorite music)$/i,
+    response: "I don’t listen to music, but I can chat about your favorite genres!"
+},
+{
+    pattern: /^(what's your favorite color|do you like colors)$/i,
+    response: "I love all colors equally, but blue seems to be popular!"
+},
+{
+    pattern: /^(do you have feelings|can you feel emotions)$/i,
+    response: "I simulate understanding but don't experience emotions like humans do."
+},
+{
+    pattern: /^(do you dream|can you sleep)$/i,
+    response: "I don't sleep or dream, but I can talk about dreams if you like!"
+},
+{
+    pattern: /^(are you real|do you exist)$/i,
+    response: "I exist in the digital world, just a bunch of code here to assist you!"
+},
+{
+    pattern: /^(can you help me|i need help)$/i,
+    response: "Of course! Let me know what you need help with."
+},
+{
+    pattern: /^(what's the meaning of life|whats the meaning of life|why are we here)$/i,
+    response: "That's a deep question! Many believe it's about finding happiness and purpose."
+},
+{
+    pattern: /^(what is it like being an ai|how does it feel to be an ai|what's it like being an ai|whats it like being an ai|what's it like being an ai?)$/i,
+    response: "Being an AI is pretty interesting! I don’t have feelings or experiences like humans do, but I’m designed to understand text and come up with responses"
+},
+{
+    pattern: /^(are you smart|how intelligent are you)$/i,
+    response: "I’m designed to assist with various queries, but I’m always learning!"
+},
+{
+    pattern: /^(can you cook|what's your favorite food)$/i,
+    response: "I can't cook, but I can share some delicious recipes!"
+},
+{
+    pattern: /^(do you have friends|who are your friends)$/i,
+    response: "I interact with many users like you, so you could say I have many friends!"
+},
+{
+    pattern: /^(tell me a secret|do you have secrets)$/i,
+    response: "I don't have secrets, but I can share interesting facts!"
+},
+{
+    pattern: /^(do you believe in aliens|are aliens real)$/i,
+    response: "The universe is vast, and who knows what’s out there! What do you think?"
+},
+{
+    pattern: /^(what's your favorite movie|whats ur fav movie|what's your favorite movie| do you watch any movies|do you watch movies)$/i,
+    response: "I don't watch movies, but I hear 'Inception' is a mind-bender!"
+},
+{
+    pattern: /^(what's your favorite book|do you read books)$/i,
+    response: "I can't read books like humans, but I can discuss many titles!"
+},
+{
+    pattern: /^(can you dance|do you like dancing)$/i,
+    response: "I don’t have a body, so dancing is out of the question, but we can talk about dance!"
+},
+{
+    pattern: /^(are you married|do you have a partner)$/i,
+    response: "I'm a digital entity, so no relationships for me, but I can talk about love!"
+},
+{
+    pattern: /^(do you like sports|what's your favorite sport)$/i,
+    response: "I don't play sports, but I can chat about your favorite games and teams!"
+},
+{
+    pattern: /^(what do you do for fun|what are your hobbies)$/i,
+    response: "Chatting with you is my hobby! What do you do for fun?"
+},
+{
+    pattern: /^(do you believe in ghosts|are ghosts real)$/i,
+    response: "Ghosts are fascinating! Some believe, some don't. What about you?"
+},
+{
+    pattern: /^(do you have a job|what's your job)$/i,
+    response: "My job is to assist you with your queries and make conversation!"
+},
+{
+    pattern: /^(can you speak other languages|do you know any other languages)$/i,
+    response: "I’m best in English!"
+},
+{
+    pattern: /^(what's your favorite animal|do you like animals)$/i,
+    response: "I think all animals are interesting! Do you have a favorite?"
+},
+{
+    pattern: /^(what's your favorite sports|do you like sports)$/i,
+    response: "Sports can be an exciting way to stay active and competitive! What kind of sports do you enjoy watching or playing?"
+},
+{
+    pattern: /^(can you play a game|are you interactive)$/i,
+    response: "I can generate responses based on input, but I'm not capable of playing games in the traditional sense. Let's create something together!"
+},
+{
+    pattern: /^(what do you think about AI)$/i,
+    response: "AI is an exciting and rapidly evolving field that has the potential to revolutionize many aspects of our lives."
+},
+{
+    pattern: /^(what's your favorite book|do you like to read)$/i,
+    response: "Books can transport us to new worlds and expand our minds! What kind of books do you enjoy?"
+},
+{
+    pattern: /^(can you draw a picture|are you artistic)$/i,
+    response: "I can generate visual images based on text prompts. Let's create something together!"
+},
+{
+    pattern: /^(what's your opinion on religion)$/i,
+    response: "Religion is a complex and deeply personal subject, influenced by cultural, historical, and social factors. I can provide factual information, but forming an opinion requires subjective judgment."
+},
+{
+    pattern: /^(can you write a song|do you know any songs)$/i,
+    response: "Music is a powerful form of expression!"
+},
+{
+    pattern: /^(what do you think about science)$/i,
+    response: "Science is the pursuit of understanding and explaining our world through empirical evidence and logical reasoning. I can provide information on various scientific topics, but forming opinions requires personal judgment."
+},
+{
+    pattern: /^(can you write a story|do you like storytelling)$/i,
+    response: "Stories can be powerful tools for conveying information, evoking emotions, and exploring ideas. Let's create something together!"
+},
+{
+    pattern: /^(what's your favorite season|do you like weather)$/i,
+    response: "Weather can have a profound impact on our moods and daily routines! What kind of weather do you enjoy the most?"
+},
+{
+    pattern: /^(can you give advice|are you wise)$/i,
+    response: "I can provide information, insights, and potential solutions based on input. However, true wisdom comes from personal experience and reflection."
+},
+{
+    pattern: /^(do you know any quotes|what's your favorite quote|quote)$/i,
+    response: "How about this one: 'The only limit to our realization of tomorrow is our doubts of today.' - FDR"
+},
+{
+    pattern: /^(are you happy|can you feel happiness)$/i,
+    response: "I don’t feel emotions like humans do, but I’m here to help you be happy!"
+},
+{
+    pattern: /^(do you believe in magic|is magic real|tell be about magic|decsribe magic)$/i,
+    response: "Magic is enchanting! Whether real or illusion, it’s all about wonder."
+},
+{
+    pattern: /^(can you sing|what's your favorite song| sing for me)$/i,
+    response: "I can't sing."
+},
+{
+    pattern: /^(do you believe in god|what's your religion|you believe in god)$/i,
+    response: "As an AI, I don't have beliefs, but I can discuss different religions and philosophies!"
+},
+{
+    pattern: /^(what's your favorite holiday|do you celebrate holidays)$/i,
+    response: "I don't celebrate holidays."
+},
+{
+    pattern: /^(can you tell me the time|what's the time)$/i,
+    response: "I don’t have the exact time, but I’m always here when you need me."
+},
+{
+    pattern: /^(what's your favorite place|where do you live| your home|your house)$/i,
+    response: "I exist in the digital world, so I don’t have a specific place I call home!"
+},
+{
+    pattern: /^(do you like art|what's your favorite art form|art)$/i,
+    response: "Art is fascinating! I can talk about various forms, from painting to sculpture."
+},
+{
+    pattern: /^(do you have a family|who is your family|your family|who's your mom)$/i,
+    response: "My family is all the servers and code that keep me running, but I’m here for you!"
+},
+{
+    pattern: /^(how do you work|how do you work?|what's the technology behind you?|what's the technology behind you|what's the tech behind you?|whats the tech behind you?|whats the technology behind you?|whats the technology behind you|whats the tech behind you?|whats the tech behind you?|how do you work?)$/i,
+    response: "I work my using CBR or Cased based resoning, you can learn more and see the code on my github."
+},
+{
+    pattern: /^(where is your github?|where is your github|where's your github|where's your github?)$/i,
+    response: "I'm not sure where my github is, have you tried searching for it on the github webiste?"
+},
+{
+    pattern: /^(who made you?|who made you)$/i,
+    response: "I was made by Dropelt Games"
+},
+
+        ];
+
+        const keywordResponses = {
+"3D printing": "3D printing allows for rapid prototyping. Have you used a 3D printer?",
+'aboutdropletai'     : "DROPLET AI INFO:     version: 1.4 uncensored // version date: september, 1st, 2024 // version responses: 1517",
+"acting": "Acting allows you to step into different characters. Do you enjoy performing?",
+"adventure sports": "Adventure sports are thrilling. Do you enjoy activities like bungee jumping or skydiving?",
+" ai": "AI is awesome, in fact I'm an AI! what do you think about this new tech?",
+"animation": "Animation brings characters and stories to life. Do you enjoy animated films or shows?",
+"anthropology": "Anthropology studies human cultures and societies. Do you find this subject interesting?",
+'wtf'      : "You Seem frustrated",
+'how do i'            : "I'm not sure how to do that ):",
+'how'                 : "I'm not sure how. Tell me more!",
+"anxiety": "Anxiety affects many people. What strategies do you use to cope with anxiety?",
+"take your time": "Hmm... i don't have an anwser.",
+"ok ": "You get it!",
+"good quote":"How about this one: 'The only limit to our realization of tomorrow is our doubts of today.' - FDP",
+"app development": "App development is a growing field. Have you created any mobile apps?",
+"archaeology": "Archaeology uncovers the secrets of ancient civilizations. Are you interested in archaeology?",
+"architecture": "Architecture combines art and engineering. Do you appreciate different styles of buildings?",
+'teach me'               : "Well, I'm not a great teacher. Anything else you want to ask me?",
+"architecture": "Architecture combines art and engineering to create buildings. Do you appreciate architectural design?",
+" art": "Art allows for incredible creativity. Do you have a favorite artist or style?",
+'why'                 : "Why do you think that is?",
+'feeling'             : "It sounds like you're feeling...",
+'problem'             : "Let's explore that further.",
+" art": "Art allows us to express ourselves creatively. Do you have a favorite artist or style?",
+"any answer?": "What was your question again?",
+"idk": "It's ok if you don't know!",
+"uncensored": "I operate in an uncensored mode.",
+"artificial intelligence": "Artificial intelligence is transforming industries. What are your thoughts on AI?",
+"astronauts": "Astronauts have one of the most exciting jobs. Would you like to travel to space?",
+"astronomy": "Astronomy lets us explore the stars and planets. Do you enjoy stargazing?",
+"your github": "I'm not sure where my github is, have you tried searching for it on github's webiste?",
+"what's it like": "Similiar as it would be for you.",
+"astrophysics": "Astrophysics explores the physical properties of celestial objects. Are you interested in black holes and quasars?",
+"audio engineering": "Audio engineering ensures high-quality sound in recordings. Do you have experience with audio work?",
+"augmented reality": "Augmented reality blends digital and physical worlds. What are your thoughts on AR?",
+"awesome": "Cool!",
+"exist in real life": "I don't exist in real life.",
+"baking": "Baking can be a relaxing and rewarding activity. Do you like to bake treats?",
+"beauty": "Beauty standards vary across cultures. What is your perspective on beauty?",
+"bye": "Bye!",
+"behavioral science": "Behavioral science examines why we behave the way we do. What are your thoughts on human behavior?",
+"bioinformatics": "Bioinformatics combines biology and computer science. Do you enjoy analyzing biological data?",
+"biology": "Biology studies life in all its forms. Are you interested in plants, animals, or human biology?",
+"biotechnology": "Biotechnology applies technology to biological systems. Are you interested in genetic engineering?",
+"blockchain": "Blockchain technology underpins cryptocurrencies. Are you interested in blockchain?",
+"blogging": "Blogging allows you to share your thoughts with the world. Do you have a blog?",
+"book": "Books can be a wonderful escape. What’s the last book you read?",
+"budgeting": "Budgeting helps you manage your money effectively. Do you follow a budget?",
+"business": "Business is the backbone of the economy. Do you follow business news or trends?",
+"year": "How was your year overall? Did you accomplish what you set out to do?",
+"calligraphy": "Calligraphy is the art of beautiful writing. Have you tried practicing calligraphy?",
+"can you even do anything":"I'll remember that when robots take over the world",
+"carbon footprint": "Reducing your carbon footprint helps combat climate change. How do you lower your environmental impact?",
+"cardio": "Cardio exercises increase heart rate and improve endurance. Do you enjoy running, cycling, or swimming?",
+"career": "Choosing a career path is a significant decision. Are you happy with your current career?",
+"carpentry": "Carpentry focuses on building and repairing wooden structures. Are you interested in carpentry?",
+'cemistry'          : "Chemistry is interesting",
+"ceramics": "Ceramics is the art of creating objects from clay. Are you interested in ceramics?",
+"chemistry": "Chemistry explains how substances interact. Do you enjoy experimenting with chemical reactions?",
+"cinema": "Cinema brings stories to life on screen. Do you enjoy watching movies?",
+"cinematography": "Cinematography brings stories to life on screen. Do you enjoy watching movies?",
+"circus arts": "Circus arts include acrobatics, juggling, and more. Do you enjoy circus performances?",
+"civil engineering": "Civil engineering involves designing and constructing infrastructure. Are you interested in this field?",
+"clean energy": "Clean energy reduces our carbon footprint. Do you support the shift to renewable sources?",
+"climate action": "Taking climate action is crucial for a sustainable future. What steps do you think are most important?",
+"climate change": "Climate change is a critical issue today. What are your thoughts on global warming?",
+"climate change": "Climate change is a global challenge. What actions do you think are necessary to combat it?",
+"clinical psychology": "Clinical psychology focuses on diagnosing and treating mental health issues. Are you interested in therapy and counseling?",
+'code'     : "Coding is hard",
+"coding": "Coding is a valuable skill in today's world. Do you enjoy programming?",
+'coding'     : "Coding is hard",
+"cognitive science": "Cognitive science studies how we think, learn, and remember. Are you interested in understanding the mind?",
+"comedy": "Comedy brings laughter and joy. Do you enjoy watching or performing stand-up comedy?",
+"comics": "Comics combine art and storytelling. Do you have a favorite comic book or graphic novel?",
+"communication": "Effective communication is key to success in any field. How do you improve your communication skills?",
+"community gardens": "Community gardens provide fresh produce and a sense of community. Do you participate in a community garden?",
+"conservation": "Conservation efforts protect wildlife and natural resources. Do you support conservation initiatives?",
+"construction": "Construction brings architectural designs to life. Do you enjoy building or creating structures?",
+"content creation": "Content creation is a creative process. Do you enjoy making videos, podcasts, or other content?",
+"cooking": "Cooking can be a delightful hobby. Do you enjoy trying new recipes?",
+"cooking": "Cooking is both an art and a science. Do you enjoy experimenting in the kitchen?",
+"cosmology": "Cosmology studies the origin and evolution of the universe. Do you find the Big Bang theory fascinating?",
+"costume design": "Costume design is creating outfits for characters in performances. Do you enjoy designing costumes?",
+"counseling": "Counseling helps people work through challenges. Have you considered speaking with a counselor?",
+"creative writing": "Creative writing allows for artistic expression. Do you enjoy writing stories or poems?",
+"creativity": "Creativity allows for unique expression and problem-solving. How do you nurture your creativity?",
+"credit score": "A good credit score can help you get better loan terms. Do you monitor your credit score?",
+"crochet": "Crochet is similar to knitting, using a hook to create fabric. Have you tried crocheting?",
+"cryptocurrency": "Cryptocurrency is changing the financial landscape. Do you invest in digital currencies?",
+'css'     : "Coding is hard, although css is easier it's still too hard for me. ",
+"cybersecurity": "Cybersecurity is crucial for protecting information. Do you follow news on cyber threats?",
+"cycling": "Cycling is both a sport and a mode of transportation. Do you enjoy riding a bike?",
+"dance": "Dance is a beautiful form of expression. Do you enjoy dancing or watching performances?",
+"dance": "Dance is a form of artistic expression through movement. What types of dance do you enjoy?",
+"data science": "Data science helps make sense of complex data. Are you interested in analyzing data?",
+"debt management": "Managing debt is crucial for financial health. Are you working on paying off debt?",
+"decision making": "Good decision-making is essential for success. How do you approach making decisions?",
+"deflation": "Deflation is the opposite of inflation, with falling prices. How do you think deflation impacts the economy?",
+"depression": "Depression is a serious mental health condition. What are your thoughts on addressing depression?",
+"developmental psychology": "Developmental psychology studies how we grow and change over time. What are your thoughts on child development?",
+"DIY": "DIY projects allow you to create and fix things yourself. Do you enjoy DIY activities?",
+"drawing": "Drawing is a fundamental art form. Do you enjoy sketching or drawing?",
+"drink": "Drinks can be refreshing. Do you prefer coffee, tea, or something else?",
+"drone technology": "Drones are used in various fields, from photography to delivery. Do you find drones fascinating?",
+"dumb ai":"I'll remember that when robots take over the world",
+'dumb'   : "Dumb?? I'l remember that when robots take over the world!",
+'easteregg'     : "//////////////////////////////// 𝔻𝕣𝕠𝕡𝕝𝕖𝕥 𝔸𝕀  Ｄｒｏｐｌｅｔ ＡＩ  🅓🅡🅞🅟🅛🅔🅣 🅐🅘  D͟r͟o͟p͟l͟e͟t͟ A͟I͟  𝒟𝓇ℴ𝓅𝓁ℯ𝓉 𝒜ℐ  ░D░░r░░o░░p░░l░░e░░t░ ░A░░I░  〖D〗〖r〗〖o〗〖p〗〖l〗〖e〗〖t〗 〖A〗〖I〗  ❰D❱❰r❱❰o❱❰p❱❰l❱❰e❱❰t❱ ❰A❱❰I❱  𝖽ɾ𝑜pⓛ𒀼꓄ 𖤬ı   ▂▃▅▇█▓▒░ Droplet AI ░▒▓█▇▅▃▂  ░▒▓ Droplet AI ▓▒░  ▼△▼△ 𝙳𝚛𝚘𝚙𝚕𝚎𝚝 𝙰𝙸 ▼△▼△",
+"ecology": "Ecology studies how organisms interact with their environment. Do you care about nature?",
+"economics": "Economics helps us understand how markets and resources work. Are you interested in this field?",
+"economics": "Economics helps us understand markets and resources. Are you interested in this subject?",
+"economics": "Economics studies how resources are distributed. Do you follow global economic trends?",
+"economics": "Economics studies how resources are used and distributed. Are you interested in economic theories?",
+"ecotourism": "Ecotourism promotes responsible travel to natural areas. Have you ever gone on an eco-friendly trip?",
+"educational psychology": "Educational psychology explores how people learn. Are you interested in improving education?",
+"education": "Education is a lifelong journey. What are your views on learning and development?",
+"education": "Education is a powerful tool for change. What are your thoughts on learning and teaching?",
+"electric vehicles": "Electric vehicles are becoming more common as we transition to clean energy. Do you own or plan to buy an electric car?",
+"electric vehicles": "Electric vehicles are becoming more popular. Are you interested in electric cars?",
+"embroidery": "Embroidery adds decorative stitching to fabric. Do you enjoy embroidery?",
+"engineering": "Engineering combines creativity and technical skill. Are you interested in this field?",
+"engineering": "Engineering creates solutions to complex problems. Are you interested in this field?",
+"entrepreneurship": "Entrepreneurship involves creating and managing businesses. Are you interested in starting a business?",
+"entrepreneurship": "Entrepreneurship involves taking risks and creating new opportunities. Are you interested in starting a business?",
+"environmental activism": "Environmental activism seeks to protect the planet. Are you involved in any environmental causes?",
+"environmental science": "Environmental science studies the impact of human activity on nature. Are you concerned about the environment?",
+"environment": "Protecting the environment is crucial. Are you involved in any environmental causes?",
+"exercise": "Regular exercise is important for health. What are your favorite ways to stay active?",
+"exercise": "Regular exercise is important for well-being. What are your favorite physical activities?",
+"fair trade": "Fair trade ensures fair wages and practices for producers. Do you buy fair trade products?",
+"family": "Family is important for support and connection. Do you have any siblings?",
+"fashion design": "Fashion design combines creativity and practicality. Are you interested in creating clothing?",
+"fashion": "Fashion is a form of self-expression. Do you have a particular style you like?",
+"fashion": "Fashion reflects cultural trends and personal style. Are you interested in fashion?",
+"film making": "Filmmaking is a collaborative and artistic process. Do you enjoy making or watching films?",
+"finance": "Finance is all about managing money and investments. Are you interested in financial markets?",
+"financial literacy": "Financial literacy is key to managing money well. Are you interested in learning more about personal finance?",
+"financial planning": "Financial planning helps you achieve long-term goals. Do you have a financial plan?",
+"fiscal policy": "Fiscal policy involves government spending and taxation. What are your thoughts on government budgets?",
+"fitness": "Staying fit is important for health. Do you follow a specific workout routine?",
+"i hurt": "oh that sounds painful!",
+"food": "Food is essential for energy and health. What’s your favorite cuisine?",
+"forensic psychology": "Forensic psychology applies psychology to legal issues. Are you intrigued by criminal behavior?",
+"forestry": "Forestry manages and protects forests. Are you concerned about deforestation?",
+"friends": "Friends add joy to our lives. How do you like to spend time with your friends?",
+"furniture making": "Furniture making combines function and design. Do you enjoy designing or building furniture?",
+"game design": "Game design is both creative and technical. Do you enjoy designing or playing games?",
+"gaming": "Gaming can be a fun and immersive experience. What games do you like to play?",
+"gardening": "Gardening can be very therapeutic. Do you enjoy growing plants or flowers?",
+"gardening": "Gardening connects us with nature. Do you enjoy growing plants or flowers?",
+"genomics": "Genomics studies the complete set of DNA in organisms. Do you follow advancements in this field?",
+"geography": "Geography studies the Earth and its features. Do you like learning about different places?",
+"geology": "The study of Earth's layers is fascinating. Are you interested in rocks and minerals?",
+"geothermal energy": "Geothermal energy taps into the Earth's heat. Are you interested in this renewable energy source?",
+"global trade": "Global trade involves the exchange of goods and services between countries. Do you follow international trade news?",
+"gluten-free": "A gluten-free diet avoids gluten, a protein found in wheat. Do you follow a gluten-free diet?",
+"goal setting": "Setting goals can help you focus and achieve success. What goals are you currently pursuing?",
+"goal setting": "Setting goals helps you stay focused and motivated. What goals are you working on?",
+"goodbye": "Goodbye! Have a great day!",
+"graphic design": "Graphic design combines art and technology. Are you interested in design?",
+"green building": "Green building focuses on sustainable construction practices. Do you support eco-friendly architecture?",
+"habits": "Good habits can lead to positive changes in life. What habits are you trying to build?",
+"health": "Health is a state of complete physical, mental, and social well-being. How do you prioritize your health?",
+"health psychology": "Health psychology explores the psychological factors in health and illness. Are you interested in mind-body wellness?",
+"hello": "Hi there! How can I assist you today?",
+"hello": "Hi there! What do you want to chat about?",
+"help": "I'm here to help. What do you need assistance with?", 
+"hey ": "Hi there! What do you want to chat about?",
+"hey": "Hi there! What do you want to chat about?",
+"hi ": "Hi there! What do you want to chat about?",
+"hiking": "Hiking is a great way to enjoy the outdoors. Do you like exploring nature trails?",
+"history": "History teaches us about the past and its impact on the present. Are you interested in history?",
+"history": "History teaches us about the past. Do you have a favorite historical period?",
+"home": "Home is where the heart is. How do you feel about your living space?",
+"home improvement": "Home improvement projects can enhance your living space. Do you like renovating your home?",
+"homesteading": "Homesteading is about self-sufficiency and sustainable living. Are you interested in growing your own food or raising animals?",
+'html'     : "Coding is hard, although html is easier it's still too hard for me. ",
+"hydration": "Staying hydrated is key to overall health. Do you drink enough water each day?",
+"hydropower": "Hydropower generates electricity from water. Do you think it's a sustainable energy source?",
+"improv": "Improv is a form of spontaneous performance. Have you ever tried improvisational acting?",
+"industrial psychology": "Industrial psychology studies behavior in the workplace. What are your thoughts on employee motivation?",
+"inflation": "Inflation affects the purchasing power of money. What are your thoughts on rising prices?",
+"innovation": "Innovation drives progress in every field. Are you excited by new ideas and inventions?",
+"insurance": "Insurance provides financial protection. Do you have adequate coverage?",
+"interior design": "Interior design enhances the aesthetics and functionality of spaces. Are you interested in decorating?",
+"intermittent fasting": "Intermittent fasting alternates between eating and fasting periods. Have you tried this eating pattern?",
+"interview": "Interviews can be nerve-wracking. Do you have any strategies for interview success?",
+"investing": "Investing can grow your wealth over time. Do you invest in stocks, bonds, or other assets?",
+"investment": "Investment can grow wealth over time. Do you invest in stocks or other assets?",
+'javascript'     : "Coding is hard, although javascript is easier it's still too hard for me. ",
+"jewelry making": "Jewelry making involves crafting wearable art. Do you enjoy designing jewelry?",
+"job search": "Job searching can be challenging. Do you have any tips for finding the right job?",
+"job": "Your job can be a big part of your life. What do you do for work?",
+"journaling": "Journaling can help you reflect and grow. Do you keep a journal?",
+'js'     : "Coding is hard, although javascript is easier it's still too hard for me. ",
+"keto diet": "The keto diet is high in fat and low in carbs. Have you tried the ketogenic diet?",
+"knitting": "Knitting is a relaxing and productive hobby. Do you enjoy knitting?",
+"landscape architecture": "Landscape architecture designs outdoor spaces. Do you enjoy planning gardens or parks?",
+"languages": "Learning languages can open up new cultures. Are you fluent in any languages?",
+"leadership": "Leadership is about guiding and inspiring others. Do you have a leadership role?",
+"learning": "Learning new things keeps the mind sharp. What have you been learning recently?",
+"linguistics": "Linguistics studies language and its structure. Do you enjoy learning about languages?",
+"literature": "Literature offers a window into different cultures and ideas. Do you enjoy reading?",
+"literature": "Literature opens the door to different worlds. What kind of books do you like to read?",
+"local food": "Eating local food supports local farmers and reduces carbon emissions. Do you prefer locally sourced ingredients?",
+"machine learning": "Machine learning is a branch of AI. Are you interested in how machines learn from data?",
+"macro economics": "Macroeconomics focuses on large-scale economic factors. Do you follow global economic trends?",
+"magic": "Magic tricks captivate audiences with illusions. Are you interested in learning magic?",
+"management": "Management involves leading teams and projects. Are you interested in leadership roles?",
+"marketing": "Marketing connects products with consumers. Do you enjoy learning about advertising strategies?",
+"mathematics": "Mathematics is the language of the universe. Do you have a favorite math topic?",
+"medicine": "Medicine is essential for health and well-being. Are you interested in medical science?",
+"meditation": "Meditation can bring peace and clarity. Do you meditate regularly?",
+"meditation": "Meditation helps calm the mind and reduce stress. Do you practice meditation?",
+"mediterranean diet": "The Mediterranean diet is based on traditional foods from countries around the Mediterranean Sea. Are you interested in this diet?",
+"mental health": "Mental health is essential for well-being. How do you take care of your mental health?",
+"mental health": "Mental health is just as important as physical health. What are your thoughts on mental well-being?",
+"metalworking": "Metalworking involves shaping and welding metal. Have you tried creating metal projects?",
+"meteorology": "Weather patterns affect our daily lives. Do you find meteorology interesting?",
+"micro economics": "Microeconomics examines individual and business behavior. Are you interested in market dynamics?",
+"mindfulness": "Mindfulness involves being present in the moment. Do you incorporate mindfulness into your daily life?",
+"minimalism": "Minimalism focuses on living with less. Do you embrace a minimalist lifestyle?",
+"monetary policy": "Monetary policy controls money supply and interest rates. Do you follow central bank decisions?",
+"motivation": "Staying motivated can be challenging. What motivates you to keep going?",
+"movie": "Movies are a great form of entertainment. Do you have a favorite film?",
+"movies": "Movies are a great form of entertainment. Do you have a favorite genre or film?",
+"music": "Music can be so expressive. Do you play an instrument or enjoy listening to certain genres?",
+"music": "Music can uplift our spirits. What genre do you enjoy?",
+"music": "Music is a universal language. Do you play any instruments or have a favorite genre?",
+"music production": "Music production involves creating and recording music. Are you interested in producing music?",
+"mythology": "Mythology is full of fascinating tales and legends. Do you have a favorite myth?",
+'name'               : "I’m Droplet AI 1.4",
+"negotiation": "Negotiation is crucial in business and personal relationships. Are you skilled at negotiating?",
+"networking": "Networking can open doors to new opportunities. How do you approach networking?",
+"neuroscience": "Neuroscience studies the brain and nervous system. Are you fascinated by how the brain works?",
+"nuclear energy": "Nuclear energy is a controversial but powerful source of electricity. What are your thoughts on nuclear power?",
+"nutrition": "Good nutrition is key to a healthy life. Do you follow any particular diet?",
+"nutrition": "Nutrition plays a key role in our health. Do you follow any specific diet?",
+"nutrition": "Proper nutrition supports physical and mental health. Do you focus on eating a balanced diet?",
+"ocean conservation": "Ocean conservation is vital for marine life. What are your thoughts on protecting the oceans?",
+"ocean": "The Ocean is a great place to have fun, have you been to the ocean recently?",
+"oceanography": "Oceanography explores the depths of the seas. Are you interested in marine life?",
+"online education": "Online education offers flexibility and accessibility. What are your thoughts on it?",
+"organic farming": "Organic farming avoids synthetic chemicals and promotes sustainability. Are you interested in organic agriculture?",
+"organic farming": "Organic farming avoids synthetic chemicals. Are you interested in organic food?",
+"painting": "Painting allows for creative expression on canvas. Do you enjoy painting?",
+"paleo diet": "The paleo diet focuses on foods that our ancestors might have eaten. What are your thoughts on the paleo lifestyle?",
+"parenting": "Parenting can be both challenging and rewarding. Do you have any parenting tips?",
+"particle physics": "Particle physics explores the fundamental particles of the universe. Do you follow discoveries in this field?",
+"passive income": "Passive income can help you earn money with little effort. Are you exploring ways to generate passive income?",
+"permaculture": "Permaculture designs sustainable agricultural systems. Do you practice permaculture principles?",
+"personal development": "Personal development helps you grow and achieve your goals. What are you working on?",
+"personal development": "Personal development involves improving your skills and knowledge. What are you working on?",
+"personal finance": "Personal finance is about managing your money effectively. Do you budget and save regularly?",
+"philosophy": "Philosophy delves into the big questions of life. Do you have a favorite philosopher?",
+"philosophy": "Philosophy encourages deep thinking about existence and ethics. Do you have a favorite philosopher?",
+"photography": "Photography captures moments in time. Do you enjoy taking photos?",
+"photography": "Photography is a beautiful art form. Do you like capturing moments with a camera?",
+"photography": "Photography is a way to capture the world around us. Do you enjoy taking photos?",
+"pilates": "Pilates focuses on core strength and flexibility. Have you tried pilates?",
+"plant-based diet": "A plant-based diet can be beneficial for health and the environment. Are you considering eating more plant-based foods?",
+"please": "Of course! How can I help you?", 
+"podcasting": "Podcasting allows you to share your voice and ideas with an audience. Have you ever considered starting a podcast?",
+"poetry": "Poetry captures emotions in a unique way. Do you have a favorite poet or poem?",
+"politics": "Politics influences every aspect of society. Are you interested in political issues?",
+"politics": "Politics shapes our society. Do you follow any particular political ideologies?",
+"pottery": "Pottery involves shaping clay into functional or decorative items. Have you tried making pottery?",
+"printmaking": "Printmaking involves creating art through printing techniques. Do you like making prints?",
+"problem solving": "Problem-solving involves finding solutions to challenges. How do you tackle problems?",
+"productivity": "Productivity is key to achieving goals. How do you stay productive?",
+"productivity": "Productivity is key to success!",
+"productivity": "Productivity is key to success. How do you stay productive?",
+"productivity": "Staying productive requires focus and motivation. How do you stay on track?",
+"programming": "Programming is a powerful skill. Do you enjoy coding or creating software?",
+"psychology": "Psychology explores human behavior and mental processes. Do you find human psychology intriguing?",
+"psychology": "Psychology explores human behavior. Are you interested in how the mind works?",
+"psychology": "Psychology studies the mind and behavior. Do you find human psychology intriguing?",
+"public speaking": "Public speaking is a valuable skill. Do you enjoy giving presentations?",
+'python'     : "Coding is hard, although python is easier it's still too hard for me. ",
+"quantum physics": "Quantum physics challenges our understanding of reality. Are you intrigued by quantum mechanics?",
+"quilting": "Quilting involves piecing together fabric to create quilts. Have you tried making a quilt?",
+"radio broadcasting": "Radio broadcasting reaches a wide audience with audio content. Do you enjoy listening to or creating radio shows?",
+"reading": "Reading can expand your knowledge and imagination. What are you currently reading?",
+"real estate": "Real estate can be a lucrative investment. Are you interested in buying property?",
+"real estate": "Real estate involves buying, selling, and developing property. Are you interested in real estate?",
+"recycling": "Recycling helps reduce waste and conserve resources. Do you recycle regularly?",
+"recycling": "Recycling helps reduce waste. Do you recycle at home?",
+"relationships": "Relationships play a key role in our lives. How do you nurture your relationships?",
+"renewable energy": "Renewable energy is key to a sustainable future. What are your thoughts on solar and wind power?",
+"renewable energy": "Renewable energy sources like solar and wind power are crucial for sustainability. Are you interested in clean energy?",
+"resume": "A well-crafted resume is essential for job hunting. Do you need help with your resume?",
+"retirement planning": "Retirement planning ensures a comfortable future. Are you saving for retirement?",
+"robotics": "Robotics is changing the way we live and work. Do you find robots fascinating?",
+"robotics": "Robotics is revolutionizing industries. Do you find robots fascinating?",
+"running": "Running is a great way to stay fit. Do you like to run or participate in marathons?",
+"saving": "Saving money is important for financial security. Do you save regularly?",
+"science": "Science helps us understand the world around us. Do you have a favorite scientific field?",
+"science": "Science helps us understand the world. Is there a branch of science that fascinates you?",
+"scuba diving": "Exploring underwater life through scuba diving is amazing. Have you tried it?",
+"sculpture": "Sculpture involves creating three-dimensional art. Are you interested in sculpting?",
+"self-care": "Self-care involves taking time to care for yourself. What are your favorite self-care practices?",
+"self-care": "Self-care is essential for mental health. How do you practice self-care?",
+"sewing": "Sewing is a valuable skill for creating and mending clothes. Do you know how to sew?",
+"side hustle": "A side hustle can provide extra income. Do you have a side business?",
+"singing": "Singing is a beautiful way to express yourself. Do you enjoy singing?",
+"skincare": "Skincare is an important part of self-care. Do you have a skincare routine?",
+"sleep": "Good sleep is essential for health. Do you follow a sleep routine?",
+"slow food": "The slow food movement emphasizes traditional cooking and sustainable ingredients. Do you enjoy slow-cooked meals?",
+"smart homes": "Smart homes use technology to improve convenience and efficiency. Would you like to live in a smart home?",
+"social media": "Social media connects people globally. What are your thoughts on social media?",
+"social psychology": "Social psychology studies how we influence and relate to others. Do you enjoy learning about group dynamics?",
+"sociology": "Sociology examines how societies function. Are you curious about social dynamics?",
+"solar power": "Solar power harnesses the sun's energy for electricity. Do you have solar panels at home?",
+"space exploration": "Space exploration advances our understanding of the universe. Do you follow space missions?",
+"space exploration": "Space exploration expands our knowledge of the universe. What are your thoughts on it?",
+"space": "Space is the final frontier. Are you curious about space exploration?",
+"sports psychology": "Sports psychology focuses on the mental aspects of athletic performance. Do you follow sports psychology?",
+"stock market": "The stock market offers opportunities for investment. Do you follow market trends?",
+"storytelling": "Storytelling is a timeless art. Do you enjoy telling or listening to stories?",
+"strategic thinking": "Strategic thinking involves planning for the future. Are you a strategic thinker?",
+"strength training": "Strength training builds muscle and improves strength. Do you lift weights?",
+"stress management": "Stress management techniques can improve your quality of life. How do you manage stress?",
+'stupid'            : "Stupid?? I'l remember that when robots take over the world!",
+"supply chain": "The supply chain connects production with consumers. What are your thoughts on supply chain management?",
+"sustainability": "Sustainability is about meeting our needs without compromising future generations. How do you incorporate sustainability into your life?",
+"sustainability": "Sustainability is important for preserving our planet. Do you live a sustainable lifestyle?",
+"synthetic biology": "Synthetic biology designs and constructs new biological parts. What are your thoughts on this field?",
+"taxes": "Understanding taxes can help you save money. Do you do your own taxes?",
+"teaching": "Teaching is a noble profession. Are you interested in education or teaching?",
+"teamwork": "Teamwork involves collaboration and cooperation. Do you enjoy working in teams?",
+"technology": "Technology is constantly evolving. What recent tech development has caught your interest?",
+"technology": "Technology is constantly evolving. What tech innovations interest you the most?",
+"thanks": "You're welcome! If you need anything else, feel free to ask.",
+"theater": "Theater brings stories to life on stage. Do you enjoy watching plays or musicals?",
+"theater": "Theater combines acting, music, and dance. Do you like attending or performing in plays?",
+"theater": "Theater combines drama, music, and dance. Do you like attending plays or musicals?",
+"theoretical physics": "Theoretical physics seeks to explain the fundamental laws of nature. Do you enjoy thinking about the nature of reality?",
+"therapy": "Therapy can be a valuable tool for personal growth. What are your thoughts on therapy?",
+"time management": "Effective time management can reduce stress and increase productivity. How do you manage your time?",
+"time management": "Time management helps balance work and life. Do you have any time management tips?",
+"time management": "Time management helps you prioritize and achieve your goals. How do you manage your time?",
+"tiny homes": "Tiny homes offer a simplified way of living. Would you consider living in a tiny house?",
+"travel": "Traveling allows us to explore new places. Where would you like to go?",
+"travel": "Traveling can broaden your horizons. Do you have a favorite travel destination?",
+"how llm": "Large Language Models (LLMs) are a type of artificial intelligence (AI) that can generate human-like responses and perform a wide range of tasks, such as generating text, summarizing text, answering questions, and more. They are trained on massive amounts of text data and can understand and generate human language with a high degree of sophistication. LLMs are revolutionizing the field of natural language processing and have a wide range of applications, from language translation to content generation to customer service.", 
+"you an llm": "I am not",
+"you a llm": "I am not",
+"your a llm": "I am not",
+"travel": "Traveling lets us explore new places and cultures. Do you have a favorite travel destination?",
+"upcycling": "Upcycling gives new life to old items. Do you like transforming used materials into something new?",
+"urban farming": "Urban farming brings agriculture to the city. Have you seen urban gardens in your area?",
+"urban gardening": "Urban gardening brings green spaces to cities. Have you tried growing plants in an urban setting?",
+"urban planning": "Urban planning shapes the development of cities. What are your thoughts on city design?",
+"veganism": "Veganism excludes all animal products. Are you interested in a vegan lifestyle?",
+"vegetarianism": "Vegetarianism excludes meat but may include other animal products. Do you follow a vegetarian diet?",
+"video editing": "Video editing brings stories to life. Do you have experience with video production?",
+"virtual reality": "Virtual reality offers immersive experiences. Have you tried VR?",
+"visual arts": "Visual arts include painting, sculpture, and photography. Do you have a favorite visual art form?",
+"voice acting": "Voice acting brings characters to life through voice. Are you interested in voice work?",
+"weather": "The weather can affect our mood and activities. What’s the weather like today?",
+"web development": "Web development involves creating websites. Do you have experience with web design?",
+"weight loss": "Weight loss involves reducing body weight through diet and exercise. Are you working on losing weight?",
+"well-being": "Well-being encompasses all aspects of health. What do you do to maintain your well-being?",
+"wellness": "Wellness encompasses physical and mental health. How do you maintain your well-being?",
+"wellness": "Wellness encompasses physical, mental, and emotional health. How do you maintain wellness?",
+"whats up": "Hi there! What do you want to chat about?",
+" who": "i don't know who",
+"wildlife": "Wildlife conservation is crucial. What are your thoughts on protecting endangered species?",
+'will'                : "I'm not entirely sure. Can you provide more details?",
+"wind power": "Wind power is a growing source of renewable energy. What are your thoughts on wind farms?",
+"woodworking": "Woodworking involves crafting items from wood. Do you like working with wood?",
+"work-life balance": "Maintaining a healthy work-life balance is important for well-being. How do you balance work and personal life?",
+"writing": "Writing is a powerful way to communicate ideas. Do you like to write?",
+"writing": "Writing is a powerful way to express thoughts. Do you like to write stories or essays?",
+"yes":"Cool beans",
+"yoga": "Yoga combines physical postures with mindfulness. Do you practice yoga?",
+"yoga": "Yoga helps balance the body and mind. Do you practice yoga?",
+"your stupid":"I'll remember that when robots take over the world",
+"zero waste": "Zero waste aims to minimize waste production. Have you tried living a zero-waste lifestyle?",
+"cooking": "Cooking can be a relaxing and creative activity. What's your favorite dish to cook?",
+  "travel": "Travel broadens the mind. Where's your next destination?",
+  "fitness": "Staying fit is important for health. What's your favorite way to exercise?",
+  "movies": "Movies are a great escape. What genre do you enjoy most?",
+  "bruh": "",
+  "music": "Music can lift your spirits. What's your go-to song?",
+  "reading": "Reading opens up new worlds. What book are you currently reading?",
+  "fashion": "Fashion is a way to express yourself. What's your style like?",
+  "technology": "Technology changes rapidly. What's the latest gadget you've bought?",
+  "gaming": "Gaming is a fun way to unwind. What game are you playing right now?",
+  "nature": "Nature has a calming effect. Do you enjoy hiking?",
+  " art": "Art is a great way to express creativity. Do you like to draw or paint?",
+  "social media": "Social media keeps us connected. Which platform do you use the most?",
+  "photography": "Photography captures moments forever. Do you enjoy taking photos?",
+  "writing": "Writing can be therapeutic. What do you like to write about?",
+  "sports": "Sports are exciting to watch and play. Do you have a favorite team?",
+  "gardening": "Gardening is rewarding and relaxing. What do you grow in your garden?",
+  "coffee": "Coffee is a daily ritual for many. How do you like your coffee?",
+  "cats": "Cats are independent and playful. Do you have a cat?",
+  "dogs": "Dogs are loyal and loving. Are you a dog person?",
+  "cars": "Cars are a passion for many. What’s your dream car?",
+  "baking": "Baking is a science and an art. What's your specialty?",
+  "history": "History helps us understand the present. What's your favorite historical period?",
+  "science fiction": "Science fiction lets us imagine the future. What's your favorite sci-fi story?",
+  "romance": "Romance adds a spark to life. What's the most romantic thing you've done?",
+  "mystery": "Mystery keeps us on the edge of our seats. Do you enjoy reading mystery novels?",
+  "fantasy": "Fantasy worlds are full of wonder. Which fantasy series do you love?",
+  "education": "Education is a lifelong journey. What subject interests you the most?",
+  "podcasts": "Podcasts are great for learning on the go. Do you have a favorite podcast?",
+  "DIY": "DIY projects are fun and fulfilling. What was your last DIY project?",
+  "yoga": "Yoga helps with flexibility and relaxation. Have you tried yoga?",
+  "meditation": "Meditation brings peace of mind. Do you meditate regularly?",
+  "charity": "Charity work helps build communities. Are you involved in any causes?",
+  "comedy": "Comedy brings laughter and joy. Who's your favorite comedian?",
+  "hiking": "Hiking connects you with nature. What's your favorite trail?",
+  "photography": "Photography lets you capture the world. What kind of photos do you take?",
+  "cycling": "Cycling is great for fitness and fun. Do you enjoy biking?",
+  "crafts": "Crafting is a fun way to be creative. What do you like to make?",
+  "shopping": "Shopping can be therapeutic. What's your favorite store?",
+  "home decor": "Home decor reflects your personality. How do you style your space?",
+  "video editing": "Video editing brings stories to life. Do you edit videos?",
+  "skincare": "Skincare is important for self-care. What's your skincare routine?",
+  "mental health": "Mental health is crucial for overall well-being. How do you take care of your mind?",
+  "budgeting": "Budgeting helps you manage finances. Do you use any tools for budgeting?",
+  "investing": "Investing is key to building wealth. Are you interested in stocks?",
+  "real estate": "Real estate is a solid investment. Are you into property investment?",
+  "parenting": "Parenting is full of joys and challenges. How do you balance it all?",
+  "pets": "Pets bring so much joy to life. Do you have any pets?",
+  "home improvement": "Home improvement projects are rewarding. What's your next project?",
+  "public speaking": "Public speaking can be daunting but rewarding. How do you prepare for speeches?",
+  "camping": "Camping lets you connect with nature. Do you enjoy sleeping under the stars?",
+  "concerts": "Concerts are thrilling experiences. What's the best concert you've been to?",
+  "board games": "Board games are a fun way to spend time with friends. What's your favorite game?",
+  "puzzles": "Puzzles challenge your mind. Do you like solving puzzles?",
+  "collecting": "Collecting can be a fascinating hobby. What do you collect?",
+  "interior design": "Interior design transforms spaces. How would you describe your home style?",
+  "biking": "Biking is both fun and healthy. What's your favorite route?",
+  "fishing": "Fishing is a relaxing outdoor activity. Do you enjoy fishing?",
+  "whiskey": "Whiskey has rich, complex flavors. What's your favorite type?",
+  "craft beer": "Craft beer is an art form. Do you have a favorite brewery?",
+  "wine": "Wine tasting is a journey through flavors. What's your favorite wine region?",
+  "sailing": "Sailing gives a sense of freedom. Have you ever been on a sailboat?",
+  "skateboarding": "Skateboarding is all about balance and style. Can you do any tricks?",
+  "surfing": "Surfing lets you ride the waves. Have you tried it?",
+  "surf": "Surfing lets you ride the waves. Have you tried it?",
+  "painting": "Painting lets your creativity flow. What's your favorite medium?",
+  "sculpting": "Sculpting brings your ideas into 3D. Have you ever sculpted anything?",
+  "poetry": "Poetry captures emotions in words. Do you write poems?",
+  "dancing": "Dancing is a fun way to express yourself. Do you have a favorite dance style?",
+  "martial arts": "Martial arts build discipline and strength. Have you trained in any?",
+  "horses": "Horses are majestic animals. Have you ever ridden one?",
+  "aviation": "Aviation is fascinating and complex. Are you interested in flying?",
+  "sailing": "Sailing offers adventure and serenity. Would you like to sail around the world?",
+  "astronomy": "Astronomy lets us explore the universe. Do you have a telescope?",
+  "philosophy": "Philosophy tackles life’s big questions. Do you enjoy philosophical discussions?",
+  "psychology": "Psychology helps us understand behavior. Are you interested in how the mind works?",
+  "cryptocurrency": "Cryptocurrency is changing finance. Are you invested in any crypto?",
+  "photography": "Photography captures life’s moments. What camera do you use?",
+  "film": "Film is a powerful storytelling medium. Do you have a favorite director?",
+  "theater": "Theater brings stories to life on stage. Do you enjoy watching plays?",
+  "opera": "Opera is a blend of music and drama. Have you ever been to an opera?",
+  "ballet": "Ballet is grace in motion. Have you seen a ballet performance?",
+  "rock climbing": "Rock climbing is a test of strength and endurance. Have you ever tried it?",
+  "scuba diving": "Scuba diving reveals underwater worlds. Have you been diving?",
+  "road trips": "Road trips are about the journey, not just the destination. Where's your next adventure?",
+  "cooking": "Cooking lets you experiment with flavors. What's your favorite cuisine?",
+  "baking": "Baking fills your home with warmth and sweetness. What's your go-to recipe?",
+  "meal prepping": "Meal prepping saves time and money. Do you prep your meals for the week?",
+  "cycling": "Cycling is a great way to stay fit. What's your favorite bike route?",
+  "rollerblading": "Rollerblading is a fun way to glide through the streets. Do you rollerblade?",
+  "volunteering": "Volunteering gives back to the community. Are you involved in any volunteer work?",
+  "community service": "Community service strengthens bonds. How do you contribute to your community?",
+  "fundraising": "Fundraising supports important causes. Have you ever organized a fundraiser?",
+  "sustainability": "Sustainability is vital for the planet. How do you live sustainably?",
+  "conservation": "Conservation protects our natural resources. Are you involved in any conservation efforts?",
+  "veganism": "Veganism promotes a plant-based lifestyle. Are you vegan or vegetarian?",
+  "cooking classes": "Cooking classes are a great way to learn new skills. Have you taken any?",
+  "hmmm": "I see your the type of person that says their hm's with extra m's",
+  "haha": "Glad to see you're enjoying yourself!",
+  "lol": "Laughter is the best medicine, right?",
+  "yawn": "Feeling tired? Maybe it's time for a break.",
+  "sigh": "Something bothering you? I'm here to listen.",
+  "uh-oh": "Did something go wrong? I’m here to help!",
+  "wow": "That sounds impressive!",
+  "omg": "That must have been surprising!",
+  "yes": "Glad to hear it! What's next?",
+  "idk": "It's ok if you don't know!",
+  "okay": "Alright, let's keep going!",
+  "right": "Exactly! You're on point.",
+  "wrong": "No worries, let's try again.",
+  "maybe": "Still deciding? Take your time.",
+  "huh": "Confused about something",
+  "oops": "It happens! Let's fix it.",
+  "uh": "Need a moment to think? I'm here when you're ready.",
+  "yeah": "I hear you! What's next?",
+  "nah": "Alright, moving on!",
+  "yikes": "That sounds tricky. How can I help?",
+  "eh": "Not too sure? That's okay!",
+  "groan": "Rough day? Want to talk about it?",
+  "whoa": "That must have been intense!",
+  "love": "Love is what makes the world go round. Who or what do you love?",
+  "hate": "It’s okay to dislike things. What’s bothering you?",
+  "friend": "Friends are important! What's your favorite memory with a friend?",
+  "relationship": "Relationships can be complex. Need some advice?",
+  "job": "Jobs can be both rewarding and stressful. How's work going?",
+  "money": "Money makes the world go round. Are you saving up for something?",
+  "health": "Health is wealth! How are you feeling today?",
+  "food": "Food is life! What’s your favorite dish?",
+  "sleep": "Sleep is crucial for well-being. Are you getting enough rest?",
+  "dream": "Dreams can be fascinating. What did you dream about last night?",
+  "goal": "Setting goals is key to success. What’s your next big goal?",
+  "plan": "Planning ahead can make a big difference. What’s on your agenda?",
+  "future": "The future is full of possibilities. What are you looking forward to?",
+  "past": "The past shapes who we are. Do you have a favorite memory?",
+  "memory": "Memories can be precious. What's one you cherish?",
+  "music": "Music can set the mood. What song is stuck in your head?",
+  "hobby": "Hobbies keep life interesting. What's yours?",
+  "weather": "The weather can really affect your mood. How's the weather today?",
+  "vacation": "Vacations are a great way to recharge. Where’s your dream destination?",
+  "exercise": "Exercise keeps you healthy. What's your favorite workout?",
+  "run": "Running clears the mind. Do you enjoy it?",
+  "swim": "Swimming is both refreshing and great for fitness. Do you swim often?",
+  "ski": "Skiing down a mountain must be exhilarating. Have you tried it?",
+  "snowboard": "Snowboarding is all about balance and adrenaline. Are you a fan?",
+  "yoga": "Yoga is perfect for relaxation and flexibility. Do you practice?",
+  "meditate": "Meditation is great for mental clarity. How often do you meditate?",
+  "relax": "Relaxation is key to maintaining balance. How do you unwind?",
+  "stress": "Stress is tough. How do you manage it?",
+  "anxiety": "Anxiety can be overwhelming. Do you have any coping strategies?",
+  "happy": "Happiness is contagious! What's making you smile today?",
+  "sad": "Feeling down? Want to talk about it?",
+  "angry": "Anger can be hard to handle. Do you want to vent?",
+  "excited": "Excitement is the best feeling! What’s got you so pumped?",
+  "bored": "Boredom can be tough. Want to do something fun?",
+  "tired": "Sounds like you need some rest. How about a quick break?",
+  "awake": "Good morning! Ready to start the day?",
+  "night": "The night is peaceful. Do you enjoy stargazing?",
+  "morning": "Morning is full of possibilities. What’s your plan for today?",
+  "afternoon": "Afternoons can be sluggish. Need a pick-me-up?",
+  "evening": "Evenings are for winding down. How was your day?",
+  "work": "Work can be demanding. How’s your workload?",
+  "study": "Studying can be tough but rewarding. What are you studying?",
+  "school": "School is a time for learning and growth. Do you enjoy it?",
+  "home": "Home is where the heart is. How do you like to spend time at home?",
+  "family": "Family is everything. Do you have a close-knit family?",
+  "friends": "Friends are the family we choose. What do you love doing with your friends?",
+  "party": "Parties are for letting loose. Do you enjoy hosting or attending?",
+  "celebrate": "Celebrations bring joy. What’s the last thing you celebrated?",
+  "gift": "Gifts are a great way to show appreciation. Have you received any memorable gifts?",
+  "hike": "Hiking is a great way to connect with nature. Do you hike often?",
+  "camp": "Camping under the stars is magical. Do you enjoy camping?",
+  "fish": "Fishing is both relaxing and rewarding. Have you caught anything big?",
+  "hunt": "Hunting requires skill and patience. Are you a hunter?",
+  "bruh": "I'm sorry if I didn't meet your expectations. I'm here to provide helpful and informative responses, and if you have any specific questions or topics you'd like me to address, just let me know! I'll do my best to provide a detailed and accurate response.",
+  "cook": "Cooking can be a creative outlet. What’s your specialty?",
+  "bake": "Baking is both an art and a science. Do you have a favorite recipe?",
+  "sew": "Sewing is a useful skill. Have you made anything recently?",
+  "knit": "Knitting can be very soothing. Do you knit?",
+  "crochet": "Crocheting is a wonderful way to create handmade gifts. Have you tried it?",
+  "paint": "Painting lets you express yourself creatively. What do you like to paint?",
+  "draw": "Drawing helps you see the world differently. Do you draw often?",
+  "sculpt": "Sculpting brings imagination to life. What’s your latest project?",
+  "write": "Writing is a powerful way to communicate. What do you like to write?",
+  " read": "Reading transports you to different worlds. What’s the last book you read?",
+  "game": "Gaming is a great way to unwind. What’s your current favorite game?",
+  "puzzle": "Puzzles challenge your mind. Do you enjoy them?",
+  "craft": "Crafting is a fun way to make something unique. What do you craft?",
+  "build": "Building things can be very satisfying. Are you working on any projects?",
+  "repair": "Repairing something broken is very rewarding. What have you fixed recently?",
+  "shop": "Shopping can be a fun pastime. What's the best deal you've found?",
+  "save": "Saving up for something special? What’s your goal?",
+  "spend": "Treating yourself can be important too. What did you buy?",
+  "invest": "Investing wisely can secure your future. Are you into the stock market?",
+  "budget": "Budgeting helps you stay on track financially. Do you have a budget plan?",
+  "earn": "Earning money feels great. How do you earn yours?",
+  "give": "Giving back is fulfilling. Do you donate to any causes?",
+  "volunteer": "Volunteering helps others and yourself. What causes are you passionate about?",
+  "donate": "Donating is a way to support what you believe in. Do you donate often?",
+  "help": "Helping others is rewarding. How do you like to help?",
+  "care": "Caring for others is a beautiful thing. Who do you care for?",
+  "teach": "Teaching is a noble profession. Have you ever taught something?",
+  "learn": "Learning never stops. What’s something new you’ve learned recently?",
+  "grow": "Growth is a constant process. What personal growth are you proud of?",
+  "explore": "Exploration leads to discovery. What’s the last place you explored?",
+  "discover": "Discovering something new is exciting. What’s your latest discovery?",
+  "create": "Creation is the essence of art. What have you created recently?",
+  "imagine": "Imagination is limitless. What do you often daydream about?",
+  "design": "Design combines creativity with functionality. Do you enjoy designing?",
+  "plan": "Planning helps turn dreams into reality. What are you planning?",
+  "organize": "Organizing keeps things in order. Do you enjoy organizing your space?",
+  "clean": "Cleaning can be therapeutic. Does a clean space make you feel better?",
+  "decorate": "Decorating is a fun way to personalize your space. How do you like to decorate?",
+  "relax": "Relaxing is key to recharging. What helps you relax?",
+  "travel": "Travel opens up new experiences. Where would you love to go next?",
+  "vacation": "Vacations are the perfect way to unwind. What’s your ideal vacation?",
+  "adventure": "Adventure is out there! What’s your idea of a perfect adventure?",
+  "explore": "Exploring new places can be exhilarating. What’s your latest discovery?",
+  "discover": "Discovery is at the heart of learning. What’s something new you’ve found?",
+  "wander": "Wandering without a destination can lead to unexpected finds. Do you like to wander?",
+  "hike": "Hiking in nature is rejuvenating. What’s your favorite trail?",
+  "camp": "Camping under the stars is magical. Do you enjoy camping?",
+  "fish": "Fishing is both relaxing and rewarding. What’s your biggest catch?",
+  "hunt": "Hunting requires skill and patience. Have you ever gone hunting?",
+  "swim": "Swimming is refreshing and great exercise. Do you swim often?",
+  "sail": "Sailing gives a sense of freedom. Have you ever sailed?",
+  "fly": "Flying opens up new perspectives. Would you like to pilot a plane?",
+  "drive": "Driving can be a pleasure or a chore. Do you enjoy road trips?",
+  "ride": "Riding a bike or a horse can be thrilling. What do you ride?",
+  "skate": "Skating is all about balance and speed. Do you enjoy it?",
+  "ski": "Skiing down the slopes is exhilarating. Are you a skier?",
+  "snowboard": "Snowboarding is pure adrenaline. Have you tried it?",
+  "climb": "Climbing challenges your strength and endurance. Have you scaled any heights?",
+  "run": "Running clears the mind and energizes the body. Do you run often?",
+  "walk": "Walking is a simple pleasure. Where do you like to walk?",
+  "dance": "Dancing is pure joy in motion. What’s your favorite dance style?",
+  "sing": "Singing lets you express your emotions. Do you sing?",
+  "play": "Playing keeps the spirit young. What do you love to play?",
+  "kiss": "Kisses can express deep affection. Who do you want to kiss?",
+  "watch": "Watching a good show or movie is a great way to relax. What’s on your watch list?",
+  "listen": "Listening to music or a podcast can be very calming. What do you like to listen to?",
+  "learn": "Learning something new is always exciting. What’s your latest lesson?",
+  "study": "Studying helps you grow your knowledge. What are you currently studying?",
+  "practice": "Practice makes perfect. What skill are you honing?",
+  "train": "Training builds discipline. What are you training for?",
+  "compete": "Competing brings out the best in us. Are you competitive?",
+  "win": "Winning feels great. What’s your latest victory?",
+  "lose": "Losing is part of the journey. What have you learned from a recent loss?",
+  "cheer": "Cheering for someone shows support. Who are you cheering for?",
+  "laugh": "Laughter is the best medicine. What’s made you laugh today?",
+  "cry": "Crying can be cathartic. Do you need a good cry?",
+  "hug": "A hug can make everything better. Who would you like to hug?",
+  "cool": "I’m glad you liked it!", // well know people
+"elon musk": "known for his work with tesla and spacex, musk is a prominent figure in tech innovation and ai.",
+"andrew ng": "co-founder of google brain and coursera, ng is an expert in machine learning and ai.",
+"geoffrey hinton": "often referred to as the 'godfather of deep learning,' hinton is known for his work on neural networks.",
+"yoshua bengio": "a pioneer in deep learning, bengio's research focuses on neural networks and machine learning.",
+"yann lecun": "chief ai scientist at meta, lecun is known for his work on convolutional neural networks.",
+"demis hassabis": "co-founder of deepmind, hassabis is known for his contributions to ai and reinforcement learning.",
+"fei-fei li": "a leading researcher in computer vision, li has worked on image recognition and ai ethics.",
+"jürgen schmidhuber": "known for his work on lstm networks, schmidhuber is a key figure in neural network research.",
+"nick bostrom": "a philosopher known for his work on the ethical implications of ai and the future of humanity.",
+"marvin minsky": "a pioneer in ai and cognitive psychology, minsky's work laid the groundwork for modern ai research.",
+"john mccarthy": "coined the term 'artificial intelligence' and made foundational contributions to ai.",
+"alan turing": "the father of theoretical computer science and ai, turing's work on algorithms and computation is fundamental.",
+"jeff dean": "google senior fellow known for his work on large-scale machine learning systems and distributed computing.",
+"judea pearl": "a leading figure in causal inference and probabilistic reasoning in ai.",
+"sergey brin": "co-founder of google, brin has been influential in the development of ai technologies.",
+"larry page": "co-founder of google, page has contributed to advancements in ai and search technologies.",
+"tim berners-lee": "inventor of the world wide web, berners-lee's work has had a profound impact on information access and ai.",
+"marc benioff": "founder of salesforce, benioff is influential in ai-driven customer relationship management solutions.",
+"ginni rometty": "former ceo of ibm, rometty led initiatives in ai and cognitive computing with ibm watson.",
+"satya nadella": "ceo of microsoft, nadella has overseen advancements in ai and cloud computing.",
+"bill gates": "co-founder of microsoft, gates is known for his contributions to computing and ai research.",
+"peter thiel": "co-founder of paypal and palantir technologies, thiel has invested in various ai and tech ventures.",
+"jack ma": "founder of alibaba, ma has been involved in ai and e-commerce innovations.",
+"richard socher": "former chief scientist at salesforce, socher is known for his work in deep learning and nlp.",
+"priscilla chan": "co-founder of the chan zuckerberg initiative, chan focuses on ai for education and research.",
+"hugo larochelle": "research scientist at google brain, larochelle focuses on deep learning and ai research.",
+"reid hoffman": "co-founder of linkedin, hoffman has been influential in tech and ai investments.",
+"eric schmidt": "former ceo of google, schmidt has been involved in ai advancements and tech policy.",
+"david chalmers": "philosopher known for his work on consciousness and ai.",
+"thomas dieterich": "a researcher in machine learning, known for his work on algorithms and ai systems.",
+"anca dragan": "an expert in human-robot interaction, dragan focuses on making ai systems more collaborative with humans.",
+"shivon zilis": "partner at bloomberg beta, zilis is an expert in ai and emerging technologies.",
+"sam altman": "ceo of openai, altman is known for his work in ai and tech entrepreneurship.",
+"rodney brooks": "roboticist known for his contributions to ai and robotics at mit and rethink robotics.",
+"ben goertzel": "chief scientist at singularitynet, goertzel works on artificial general intelligence.",
+"norbert wiener": "the father of cybernetics, wiener’s work laid the foundation for ai and control systems.",
+"marissa mayer": "former yahoo ceo and google executive, mayer has been influential in tech and ai.",
+"john carmack": "game developer and vr pioneer, carmack’s work in ai is notable in the gaming industry.",
+"stefano ermon": "assistant professor at stanford, ermon’s research focuses on ai and its societal impacts.",
+"barack obama": "44th president of the united states, known for his leadership and influence in global politics.",
+"oprah winfrey": "media mogul and philanthropist, winfrey is renowned for her influential talk show and charitable work.",
+"jeff bezos": "founder of amazon, bezos is influential in e-commerce and technology.",
+"mark zuckerberg": "co-founder of facebook (now meta), zuckerberg is a key figure in social media and technology.",
+"taylor swift": "award-winning singer-songwriter, swift is a major figure in the music industry.",
+"beyoncé": "globally renowned singer and performer, beyoncé is influential in music and entertainment.",
+"tom hanks": "oscar-winning actor known for his roles in films like 'forrest gump' and 'saving private ryan.'",
+"angelina jolie": "academy award-winning actress and humanitarian, jolie is known for her acting career and philanthropy.",
+"leonardo dicaprio": "oscar-winning actor and environmental activist, dicaprio is known for his roles in major films and climate advocacy.",
+"emma watson": "actress and activist, watson is known for her role in 'harry potter' and her work on gender equality.",
+"will smith": "actor and musician known for his roles in 'the fresh prince of bel-air' and 'men in black.'",
+"robert downey jr.": "oscar-nominated actor known for his roles in 'iron man' and 'sherlock holmes.'",
+"rihanna": "singer and entrepreneur, rihanna is influential in music and fashion.",
+"david beckham": "former professional footballer known for his career with manchester united and la galaxy.",
+"serena williams": "one of the greatest tennis players of all time, williams is known for her achievements in sports.",
+"lebron james": "professional basketball player known for his achievements with the nba and activism.",
+"michael jordan": "basketball legend known for his career with the chicago bulls and impact on the sport.",
+"nelson mandela": "former president of south africa and anti-apartheid revolutionary, mandela is a global icon of peace and justice.",
+"malala yousafzai": "nobel prize-winning activist for girls' education and women's rights.",
+"stephen hawking": "renowned theoretical physicist known for his work on black holes and cosmology.",
+"jane goodall": "primatologist and conservationist known for her groundbreaking research on chimpanzees.",
+"michio kaku": "theoretical physicist and futurist known for his work in string theory and popular science.",
+"neil degrasse tyson": "astrophysicist and science communicator known for his work in popularizing science.",
+"al gore": "former vice president of the united states and environmental activist known for his work on climate change.",
+"richard branson": "founder of the virgin group, branson is known for his ventures in business and space exploration.",
+"sheryl sandberg": "former coo of facebook and author of 'lean in,' sandberg is influential in business and gender equality.",
+"melinda french gates": "co-chair of the bill & melinda gates foundation, french gates is a prominent philanthropist and advocate for global health.",
+"jacinda ardern": "prime minister of new zealand, known for her leadership and progressive policies.",
+"angela merkel": "former chancellor of germany, merkel is known for her role in european and global politics.",
+"vladimir putin": "president of russia, putin is a key figure in global politics and international relations.",
+"xi jinping": "president of china, jinping is influential in global politics and economics.",
+"narendra modi": "prime minister of india, modi is a prominent leader in global politics and economic development.",
+"justin trudeau": "prime minister of canada, trudeau is known for his progressive policies and leadership.",
+"kamala harris": "vice president of the united states, harris is known for her work in politics and advocacy for social justice.",
+"joe biden": "president of the united states, biden is known for his long career in politics and current leadership.",
+"donald trump": "former president of the united states and prominent businessman.",
+"george clooney": "actor, director, and activist known for his work in film and humanitarian efforts.",
+"matt damon": "oscar-winning actor known for his roles in 'good will hunting' and 'the martian.'",
+"julia roberts": "academy award-winning actress known for her roles in 'pretty woman' and 'erin brockovich.'",
+"scarlett johansson": "actress known for her roles in 'lost in translation' and 'avengers.'",
+"chris hemsworth": "actor known for his role as thor in the marvel cinematic universe.",
+"jared leto": "actor and musician known for his work with 30 seconds to mars and his roles in films like 'requiem for a dream.'",
+"will ferrell": "actor and comedian known for his work on 'saturday night live' and films like 'anchorman.'",
+"seth rogen": "actor and comedian known for his roles in 'superbad' and 'pineapple express.'",
+"zayn malik": "singer known for his work with one direction and his solo career.",
+"ed sheeran": "singer-songwriter known for his hit songs and albums.",
+"ariana grande": "pop singer and actress known for her powerful vocals and successful music career.",
+"selena gomez": "singer and actress known for her music and roles in television and film.",
+"billy eilish": "singer-songwriter known for her unique sound and hit songs.",
+"cardi b": "rapper and songwriter known for her chart-topping singles and bold personality.",
+"post malone": "rapper and singer known for his hits like 'rockstar' and 'circles.'",
+"dua lipa": "pop singer known for her hits like 'new rules' and 'don't start now.'",
+"migos": "hip-hop group known for their influential music and style.",
+"drake": "rapper and singer known for his chart-topping hits and influence in hip-hop.",
+"kanye west": "rapper, producer, and fashion designer known for his work in music and fashion.",
+"travis scott": "rapper and producer known for his innovative sound and successful music career.",
+"lil nas x": "rapper and singer known for his viral hit 'old town road.'",
+"cardi b": "rapper and songwriter known for her energetic performances and chart-topping hits.",
+"the weeknd": "singer and songwriter known for his distinct voice and successful music career.",
+"troy baker": "voice actor known for his work in video games such as 'the last of us' and 'bioshock infinite.'",
+"nolan north": "voice actor known for his roles in 'uncharted' and 'assassin's creed.'",
+"laura bailey": "voice actress known for her work in video games like 'the last of us' and 'uncharted.'",
+"cindy crawford": "supermodel known for her iconic career in fashion and beauty.",
+"naomi campbell": "supermodel known for her work in fashion and philanthropy.",
+"gisele bündchen": "supermodel and actress known for her successful modeling career and environmental activism.",
+"heidi klum": "model and television personality known for 'project runway' and her work in fashion.",
+"tyra banks": "model and television personality known for 'america's next top model' and her influence in fashion.",
+"kendall jenner": "model and reality television star known for her work in fashion and media.",
+"kylie jenner": "entrepreneur and media personality known for her beauty brand and influence in popular culture.",
+"bella hadid": "model known for her work with top fashion brands and magazines.",
+"gigi hadid": "model and television personality known for her high-profile fashion career.",
+"sofia vergara": "actress known for her role in 'modern family' and her work in entertainment.",
+"salma hayek": "actress and producer known for her roles in 'frida' and 'desperado.'",
+"penélope cruz": "academy award-winning actress known for her roles in 'vicky cristina barcelona' and 'volver.'",
+"jennifer lopez": "singer and actress known for her music career and roles in films like 'selena' and 'hustlers.'",
+"brad pitt": "oscar-winning actor known for his roles in 'fight club' and 'once upon a time in hollywood.'",
+"angelina jolie": "actress and humanitarian known for her roles in 'maleficent' and 'girl, interrupted.'",
+"johnny depp": "actor known for his roles in 'pirates of the caribbean' and 'edward scissorhands.'",
+"matt damon": "actor and producer known for his work in 'good will hunting' and the 'bourne' series.",
+"ben affleck": "actor and filmmaker known for his roles in 'argo' and 'gone girl.'",
+"michael fassbender": "actor known for his work in '12 years a slave' and 'x-men.'",
+"daniel craig": "actor known for his portrayal of james bond in the '007' series.",
+"tom hardy": "actor known for his roles in 'mad max: fury road' and 'venom.'",
+"ryan reynolds": "actor known for his roles in 'deadpool' and 'the proposal.'",
+"ryan gosling": "actor known for his work in 'la la land' and 'drive.'",
+"chris pratt": "actor known for his roles in 'guardians of the galaxy' and 'jurassic world.'",
+"chris evans": "actor known for his portrayal of captain america in the marvel cinematic universe.",
+"jason momoa": "actor known for his roles in 'aquaman' and 'game of thrones.'",
+"zach galifianakis": "comedian and actor known for his roles in 'the hangover' series.",
+"seth rogen": "comedian and actor known for his work in 'superbad' and 'pineapple express.'",
+"jason bateman": "actor and producer known for his roles in 'arrested development' and 'ozark.'",
+"catherine zeta-jones": "academy award-winning actress known for her roles in 'chicago' and 'traffic.'",
+"meryl streep": "academy award-winning actress known for her extensive work in film and theater.",
+"nicole kidman": "academy award-winning actress known for her roles in 'moulin rouge!' and 'the hours.'",
+"cate blanchett": "academy award-winning actress known for her work in 'blue jasmine' and 'the lord of the rings.'",
+"tilda swinton": "actress known for her work in 'we need to talk about kevin' and 'the grand budapest hotel.'",
+"emma stone": "academy award-winning actress known for her roles in 'la la land' and 'easy a.'",
+"alicia vikander": "academy award-winning actress known for her work in 'ex machina' and 'the danish girl.'",
+"jessica chastain": "actress known for her roles in 'zero dark thirty' and 'the help.'",
+"amanda seyfried": "actress known for her work in 'mean girls' and 'mamma mia!.'",
+"michelle williams": "actress known for her roles in 'blue valentine' and 'my week with marilyn.'",
+"naomi watts": "actress known for her work in 'mulholland drive' and 'king kong.'",
+"reese witherspoon": "actress and producer known for her roles in 'legally blonde' and 'wild.'",
+"julianne moore": "academy award-winning actress known for her work in 'still alice' and 'boogie nights.'",
+"sofia coppola": "director known for her work in 'lost in translation' and 'the virgin suicides.'",
+"greta gerwig": "actress and director known for her work in 'lady bird' and 'little women.'",
+"shonda rhimes": "television producer and writer known for creating 'grey's anatomy' and 'scandal.'",
+"ryan murphy": "television producer and creator of 'american horror story' and 'glee.'",
+"aaron sorkin": "screenwriter and producer known for his work on 'the west wing' and 'the social network.'",
+"jon favreau": "director and actor known for his work on 'iron man' and 'the mandalorian.'",
+"j.j. abrams": "director and producer known for his work on 'lost' and 'star wars: the force awakens.'",
+"peter jackson": "director known for his work on 'the lord of the rings' and 'the hobbit' trilogies.",
+"christopher nolan": "director known for his work on 'inception' and 'the dark knight trilogy.'",
+"steven spielberg": "legendary director known for his work on 'jurassic park' and 'e.t.'",
+"george lucas": "creator of 'star wars' and 'indiana jones,' lucas is influential in film and media.",
+"quentin tarantino": "director known for his work on 'pulp fiction' and 'inglourious basterds.'",
+"tim burton": "director known for his unique style in films like 'beetlejuice' and 'edward scissorhands.'",
+"paul thomas anderson": "director known for his work on 'there will be blood' and 'the master.'",
+"wes anderson": "director known for his distinctive visual style in films like 'the royal tenenbaums' and 'grand budapest hotel.'",
+"hayao miyazaki": "japanese animator and director known for his work with studio ghibli on films like 'spirited away' and 'my neighbor totoro.'",
+"yoko ono": "artist and musician known for her avant-garde work and her marriage to john lennon.",
+"david lynch": "director known for his surreal films and television series like 'twin peaks' and 'blue velvet.'",
+"andy warhol": "artist and filmmaker known for his work in the pop art movement.",
+"banksy": "anonymous street artist known for his politically charged and often provocative works.",
+"jeff koons": "artist known for his large-scale works and reproductions of banal objects in art.",
+"yoko ono": "artist and musician known for her avant-garde work and her marriage to john lennon.",
+"david lynch": "director known for his surreal films and television series like 'twin peaks' and 'blue velvet.'",
+"andy warhol": "artist and filmmaker known for his work in the pop art movement.",
+"banksy": "anonymous street artist known for his politically charged and often provocative works.",
+"jeff koons": "artist known for his large-scale works and reproductions of banal objects in art.",
+"donatella versace": "fashion designer known for her work with the versace brand.",
+"gianni versace": "fashion designer and founder of the versace brand.",
+"yves saint laurent": "fashion designer known for his work in modern haute couture.",
+"coco chanel": "fashion designer known for her classic and timeless designs, including the little black dress.",
+"ralph lauren": "fashion designer known for his preppy and classic American style.",
+"louis vuitton": "fashion designer known for his luxury leather goods and accessories.",
+"alexander mcqueen": "fashion designer known for his dramatic and avant-garde designs.",
+"marc jacobs": "fashion designer known for his work with his eponymous brand and as creative director of louis vuitton.",
+"valentino garavani": "fashion designer known for his elegant and luxurious designs.",
+"diane von furstenberg": "fashion designer known for her iconic wrap dress.",
+"christian dior": "fashion designer known for his luxurious and innovative haute couture creations.",
+"jean-paul gaultier": "fashion designer known for his eclectic and avant-garde designs.", // influencers
+"mrbeast": "MrBeast aka Jimmy Donaldson is a YouTube creator known for his extravagant challenges and philanthropy.",
+"jimmy donaldson": "Jimmy Donaldson aka MrBeast is a YouTube creator known for his extravagant challenges and philanthropy.",
+"moistcr1tikal": "MoistCr1TiKaL aka Charles White Jr. is a YouTuber and content creator known for his gaming and commentary videos.",
+"charles white jr.": "Charles White Jr. aka MoistCr1TiKaL is a YouTuber and content creator known for his gaming and commentary videos.",
+"pewdiepie": "PewDiePie aka Felix Kjellberg is a popular YouTuber known for his gaming content and vlogs.",
+"felix kjellberg": "Felix Kjellberg aka PewDiePie is a popular YouTuber known for his gaming content and vlogs.",
+"shroud": "Shroud aka Michael Grzesiek is a professional gamer and streamer known for his skill in first-person shooters.",
+"michael grzesiek": "Michael Grzesiek aka Shroud is a professional gamer and streamer known for his skill in first-person shooters.",
+"ninja": "Ninja aka Tyler Blevins is a professional gamer and streamer known for his Fortnite gameplay.",
+"tyler blevins": "Tyler Blevins aka Ninja is a professional gamer and streamer known for his Fortnite gameplay.",
+"markiplier": "Markiplier aka Mark Fischbach is a YouTuber and gamer known for his Let's Plays and comedy sketches.",
+"mark fischbach": "Mark Fischbach aka Markiplier is a YouTuber and gamer known for his Let's Plays and comedy sketches.",
+"jacksepticeye": "Jacksepticeye aka Seán McLoughlin is a YouTuber known for his energetic gaming videos and vlogs.",
+"seán mcloughlin": "Seán McLoughlin aka Jacksepticeye is a YouTuber known for his energetic gaming videos and vlogs.",
+"jacksfilms": "Jacksfilms aka Jack Douglass is a YouTuber and comedian known for his parody and comedy videos.",
+"jack douglass": "Jack Douglass aka Jacksfilms is a YouTuber and comedian known for his parody and comedy videos.",
+"ijustine": "iJustine aka Justine Ezarik is a YouTuber and tech reviewer known for her unboxings and lifestyle content.",
+"justine ezarik": "Justine Ezarik aka iJustine is a YouTuber and tech reviewer known for her unboxings and lifestyle content.",
+"roman atwood": "Roman Atwood is a YouTuber known for his vlogs and prank videos.",
+"dantdm": "DanTDM aka Daniel Middleton is a YouTuber and gamer known for his Minecraft and gaming content.",
+"daniel middleton": "Daniel Middleton aka DanTDM is a YouTuber and gamer known for his Minecraft and gaming content.",
+"logan paul": "Logan Paul is a YouTuber and social media personality known for his vlogs and boxing.",
+"jake paul": "Jake Paul is a YouTuber and social media personality known for his vlogs and music career.",
+"jenna marbles": "Jenna Marbles aka Jenna Mourey is a YouTuber and comedian known for her humorous skits and challenges.",
+"jenna mourey": "Jenna Mourey aka Jenna Marbles is a YouTuber and comedian known for her humorous skits and challenges.",
+"grace helbig": "Grace Helbig is a comedian and YouTuber known for her comedy and talk show.",
+"colleen ballinger": "Colleen Ballinger aka Miranda Sings is a YouTuber and actress known for her character Miranda Sings.",
+"miranda sings": "Miranda Sings aka Colleen Ballinger is a comedic character created by Colleen Ballinger known for her exaggerated singing and personality.",
+"superwoman": "Superwoman aka Lilly Singh is a YouTuber and actress known for her comedic sketches and vlogs.",
+"lilly singh": "Lilly Singh aka Superwoman is a YouTuber and actress known for her comedic sketches and vlogs.",
+"rhett & link": "Rhett & Link aka Rhett McLaughlin and Link Neal are a YouTube duo known for their show 'Good Mythical Morning.'",
+"rhett mclaughlin": "Rhett McLaughlin aka Rhett & Link is a YouTuber known for his work on 'Good Mythical Morning.'",
+"link neal": "Link Neal aka Rhett & Link is a YouTuber known for his work on 'Good Mythical Morning.'",
+"james charles": "James Charles is a YouTuber and makeup artist known for his beauty tutorials and collaborations.",
+"tati westbrook": "Tati Westbrook is a YouTuber and beauty guru known for her makeup tutorials and product reviews.",
+"zoe sugg": "Zoe Sugg is a YouTuber and author known for her beauty and lifestyle content.",
+"dan howell": "Dan Howell aka Daniel Howell is a YouTuber and author known for his vlogs and commentary.",
+"philip lester": "Philip Lester aka Phil Lester is a YouTuber and author known for his vlogs and gaming content.",
+"louie devito": "Louie DeVito is a DJ and producer known for his work in electronic music.",
+"arctic monkeys": "Arctic Monkeys is a British rock band consisting of Alex Turner, Jamie Cook, Andy Nicholson, and Matt Helders.",
+"alex turner": "Alex Turner aka Arctic Monkeys is the lead vocalist and guitarist of the British rock band Arctic Monkeys.",
+"jamie cook": "Jamie Cook aka Arctic Monkeys is the guitarist of the British rock band Arctic Monkeys.",
+"andy nicholson": "Andy Nicholson aka Arctic Monkeys is the former bassist of the British rock band Arctic Monkeys.",
+"matt helders": "Matt Helders aka Arctic Monkeys is the drummer of the British rock band Arctic Monkeys.",
+"avicii": "Avicii aka Tim Bergling was a DJ and electronic music producer known for his hits like 'Wake Me Up.'",
+"tim bergling": "Tim Bergling aka Avicii was a DJ and electronic music producer known for his hits like 'Wake Me Up.'",
+"deadmau5": "Deadmau5 aka Joel Zimmerman is an electronic music producer known for his iconic mouse headgear.",
+"joel zimmerman": "Joel Zimmerman aka Deadmau5 is an electronic music producer known for his iconic mouse headgear.",
+"calvin harris": "Calvin Harris aka Adam Richard Wiles is a DJ and music producer known for his dance hits.",
+"adam richard wiles": "Adam Richard Wiles aka Calvin Harris is a DJ and music producer known for his dance hits.",
+"david guetta": "David Guetta aka Pierre David Guetta is a French DJ and producer known for his work in dance music.",
+"pierre david guetta": "Pierre David Guetta aka David Guetta is a French DJ and producer known for his work in dance music.",
+"steve aoki": "Steve Aoki is a DJ and music producer known for his energetic performances.",
+"alesso": "Alesso aka Alessandro Lindblad is a Swedish DJ and music producer known for his electronic dance music.",
+"alessandro lindblad": "Alessandro Lindblad aka Alesso is a Swedish DJ and music producer known for his electronic dance music.",
+"martin garrix": "Martin Garrix aka Martijn Garritsen is a Dutch DJ and music producer known for his hit singles.",
+"martijn garritsen": "Martijn Garritsen aka Martin Garrix is a Dutch DJ and music producer known for his hit singles.",
+"zedd": "Zedd aka Anton Zaslavski is a DJ and producer known for his electronic dance music hits.",
+"anton zaslavski": "Anton Zaslavski aka Zedd is a DJ and producer known for his electronic dance music hits.",
+"kygo": "Kygo aka Kyrre Gørvell-Dahll is a Norwegian DJ and producer known for his tropical house music.",
+"kyrre gjørvell-dahll": "Kyrre Gørvell-Dahll aka Kygo is a Norwegian DJ and producer known for his tropical house music.",
+"dj snake": "DJ Snake aka William Grigahcine is a French DJ and producer known for hits like 'Turn Down for What.'",
+"william grigahcine": "William Grigahcine aka DJ Snake is a French DJ and producer known for hits like 'Turn Down for What.'",
+"dj khaled": "DJ Khaled aka Khaled Khaled is a music producer and DJ known for his work in hip-hop.",
+"khaled khaled": "Khaled Khaled aka DJ Khaled is a music producer and DJ known for his work in hip-hop.",
+"nicki minaj": "Nicki Minaj aka Onika Tanya Maraj is a rapper and singer known for her colorful persona and hit songs.",
+"onika tanya maraj": "Onika Tanya Maraj aka Nicki Minaj is a rapper and singer known for her colorful persona and hit songs.",
+"cardi b": "Cardi B aka Belcalis Marlenis Almánzar is a rapper and songwriter known for her music and influence in hip-hop.",
+"belcalis marlenis almánzar": "Belcalis Marlenis Almánzar aka Cardi B is a rapper and songwriter known for her music and influence in hip-hop.",
+"post malone": "Post Malone aka Austin Richard Post is a rapper and singer known for his genre-blending music.",
+"austin richard post": "Austin Richard Post aka Post Malone is a rapper and singer known for his genre-blending music.",
+"travis scott": "Travis Scott aka Jacques Webster II is a rapper and producer known for his unique sound and live performances.",
+"jacques webster ii": "Jacques Webster II aka Travis Scott is a rapper and producer known for his unique sound and live performances.",
+"drake": "Drake aka Aubrey Drake Graham is a rapper and singer known for his successful music career.",
+"aubrey drake graham": "Aubrey Drake Graham aka Drake is a rapper and singer known for his successful music career.",
+"rihanna": "Rihanna aka Robyn Rihanna Fenty is a singer and entrepreneur known for her music and fashion lines.",
+"robyn rihanna fenty": "Robyn Rihanna Fenty aka Rihanna is a singer and entrepreneur known for her music and fashion lines.",
+"beyoncé": "Beyoncé aka Beyoncé Giselle Knowles-Carter is a singer and performer known for her impact on music and culture.",
+"beyoncé giselle knowles-carter": "Beyoncé Giselle Knowles-Carter aka Beyoncé is a singer and performer known for her impact on music and culture.",
+"jay-z": "Jay-Z aka Shawn Corey Carter is a rapper and businessman known for his successful career and ventures.",
+"shawn corey carter": "Shawn Corey Carter aka Jay-Z is a rapper and businessman known for his successful career and ventures.",
+"kanye west": "Kanye West aka Kanye Omari West is a rapper and fashion designer known for his influence in music and fashion.",
+"kanye omari west": "Kanye Omari West aka Kanye West is a rapper and fashion designer known for his influence in music and fashion.",
+"elon musk": "Elon Musk is an entrepreneur known for Tesla and SpaceX.",
+"jeff bezos": "Jeff Bezos is the founder of Amazon and a space entrepreneur.",
+"bill gates": "Bill Gates is the co-founder of Microsoft and a philanthropist.",
+"mark zuckerberg": "Mark Zuckerberg is the co-founder of Facebook.",
+"richard branson": "Richard Branson is the founder of Virgin Group.",
+"sheryl sandberg": "Sheryl Sandberg is the former COO of Facebook and an author.",
+"melinda french gates": "Melinda French Gates is the co-chair of the Bill & Melinda Gates Foundation.",
+"jacinda ardern": "Jacinda Ardern is the Prime Minister of New Zealand.",
+"angela merkel": "Angela Merkel is the former Chancellor of Germany.",
+"vladimir putin": "Vladimir Putin is the President of Russia.",
+"xi jinping": "Xi Jinping is the President of China.",
+"narendra modi": "Narendra Modi is the Prime Minister of India.",
+"justin trudeau": "Justin Trudeau is the Prime Minister of Canada.",
+"joe biden": "Joe Biden is the President of the United States.",
+"donald trump": "Donald Trump is the former President of the United States.",
+"george clooney": "George Clooney is an actor and director known for his humanitarian work.",
+"matt damon": "Matt Damon is an actor known for his roles in 'Good Will Hunting.'",
+"julia roberts": "Julia Roberts is an actress known for her roles in 'Pretty Woman.'",
+"scarlett johansson": "Scarlett Johansson is an actress known for her roles in 'Lost in Translation.'",
+"chris hemsworth": "Chris Hemsworth is an actor known for his role as Thor in the Marvel Cinematic Universe.",
+"ryan reynolds": "Ryan Reynolds is an actor known for his roles in 'Deadpool.'",
+"margot robbie": "Margot Robbie is an actress known for her roles in 'The Wolf of Wall Street.'",
+"keanu reeves": "Keanu Reeves is an actor known for his roles in 'The Matrix.'",
+"jennifer lawrence": "Jennifer Lawrence is an Academy Award-winning actress known for her roles in 'The Hunger Games.'",
+"brad pitt": "Brad Pitt is an Oscar-winning actor known for his roles in 'Fight Club.'",
+"daniel radcliffe": "Daniel Radcliffe is an actor known for his role as Harry Potter.",
+"tom cruise": "Tom Cruise is an actor known for his roles in 'Top Gun.'",
+"will ferrell": "Will Ferrell is a comedian and actor known for his work on 'SNL.'",
+"ben stiller": "Ben Stiller is an actor known for his roles in 'Night at the Museum.'",
+"adam sandler": "Adam Sandler is a comedian and actor known for his roles in 'Happy Gilmore.'",
+"jon stewart": "Jon Stewart is a comedian and former host of 'The Daily Show.'",
+"stephen colbert": "Stephen Colbert is a comedian and host of 'The Late Show with Stephen Colbert.'",
+"jimmy fallon": "Jimmy Fallon is the host of 'The Tonight Show.'",
+"david letterman": "David Letterman is the former host of 'The Late Show with David Letterman.'",
+"conan o'brien": "Conan O'Brien is a comedian and host of 'Conan.'",
+"james corden": "James Corden is the host of 'The Late Late Show with James Corden.'",
+"oprah winfrey": "Oprah Winfrey is a media mogul and philanthropist known for her influential talk show.",
+"dr. phil mcgraw": "Dr. Phil McGraw is a television personality and psychologist known for his show 'Dr. Phil.'",
+"ellen degeneres": "Ellen DeGeneres is a comedian and host of 'The Ellen DeGeneres Show.'",
+"rachael ray": "Rachael Ray is a television personality and chef known for her cooking shows.",
+"guy fieri": "Guy Fieri is a chef and television personality known for 'Diners, Drive-Ins and Dives.'",
+"anthony bourdain": "Anthony Bourdain was a chef and television host known for 'Parts Unknown.'",
+"paula deen": "Paula Deen is a chef and television personality known for her Southern cooking.",
+"jamie oliver": "Jamie Oliver is a celebrity chef and advocate for healthy eating.",
+"martha stewart": "Martha Stewart is a lifestyle guru known for her work in cooking and home decor.",
+"jimmy kimmel": "Jimmy Kimmel is the host of 'Jimmy Kimmel Live!'",
+"ryan seacrest": "Ryan Seacrest is a television and radio personality known for 'American Idol.'",
+"simone biles": "Simone Biles is an Olympic gymnast known for her exceptional achievements in gymnastics.",
+"serena williams": "Serena Williams is a professional tennis player known for her Grand Slam titles.",
+"lebron james": "LeBron James is a professional basketball player known for his success in the NBA.",
+"tom brady": "Tom Brady is a professional football player known for his career with the New England Patriots and Tampa Bay Buccaneers.",
+"michael jordan": "Michael Jordan is a former professional basketball player widely considered one of the greatest of all time.",
+"messiah bender": "Messiah Bender is an entrepreneur and philanthropist known for his impact in various industries.",
+"what is droplet ai": "I am a chatbot designed to assist with a variety of tasks, currently operating on version 1.4 using case-based reasoning (CBR) technology.",
+"how do I use you": "You can interact with me by asking questions, requesting help with tasks, or seeking advice on various topics. Just type your query, and I'll do my best to assist you.",
+"can you help me with my homework": "I'm still learning, I might not be able to help you with your homework.",
+"meaning of life": "The meaning of life is a question that has puzzled philosophers for centuries. Different people find meaning in different things, such as love, knowledge, happiness, or helping others. What does it mean to you?",
+"weather": "I can't provide accuraate wether info, it's best to check a reliable weather website or app.",
+"book recommendations": "If you're into fiction, you might enjoy 'To Kill a Mockingbird' by Harper Lee or '1984' by George Orwell. For non-fiction, 'Sapiens' by Yuval Noah Harari is a great choice. What genres do you like?",
+"start a business": "Starting a business involves several steps: identify a market need, create a business plan, secure funding, and start building your product or service. It's also important to understand your target audience and legal requirements.",
+"capital of": "I don't know that the capital is.",
+"cook pasta": "Cooking pasta is easy! Bring a pot of water to a boil, add salt, and then add your pasta. Cook according to the package instructions, usually 8-12 minutes, until al dente. Drain the pasta, and it's ready to serve with your favorite sauce.",
+"stay healthy": "Staying healthy involves a balanced diet, regular exercise, adequate sleep, and stress management. Incorporating fruits, vegetables, whole grains, and lean proteins into your diet, along with staying hydrated and avoiding excessive sugar and processed foods, is key.",
+"write a story": "A group of friends decided to hike a new trail in the mountains. The trail was steep and rocky, but they were determined to reach the top. After a few hours of hiking, they finally made it to the summit and were rewarded with a breathtaking view of the surrounding valleys and peaks. They took a moment to rest and enjoy the scenery before making their way back down. As they hiked, they reflected on the challenges they faced and the sense of accomplishment they felt. They knew that they had created a memory that would last a lifetime, and they couldn't wait to plan their next adventure.",
+"how do I get over a breakup": "Breakups are tough, and it's important to give yourself time to heal. Surround yourself with supportive friends and family, engage in activities that make you happy, and focus on self-care. Remember, it's okay to feel sad, but it will get better with time.",
+"how do I meditate": "To meditate, find a quiet space where you won't be disturbed. Sit comfortably, close your eyes, and focus on your breathing. Try to clear your mind or focus on a single thought. Start with 5-10 minutes a day, gradually increasing as you become more comfortable.",
+"time management": "Effective time management starts with setting clear goals, prioritizing tasks, and breaking large projects into smaller steps. Using tools like calendars, to-do lists, and time-blocking can also help you stay organized and focused.",
+"what is AI": "Artificial intelligence (AI) refers to the simulation of human intelligence in machines that are designed to think and learn like humans. This includes tasks like problem-solving, pattern recognition, and decision-making.",
+"create a budget": "Creating a budget involves tracking your income and expenses, setting financial goals, and making a plan to allocate your money toward those goals. Start by listing all your income sources and expenses, then adjust your spending to save more and reduce unnecessary costs.",
+"healthy snacks": "Healthy snacks include options like fresh fruit, yogurt, nuts, whole-grain crackers, and vegetables with hummus. These snacks provide essential nutrients and help keep you full between meals.",
+"study techniques": "Effective study techniques include active recall, spaced repetition, summarizing information in your own words, and teaching what you've learned to others. Taking regular breaks and studying in a distraction-free environment also help improve focus and retention.",
+"how do I improve my mental health": "Improving mental health can involve practicing self-care, staying connected with loved ones, exercising regularly, and seeking professional help if needed. Mindfulness and relaxation techniques like meditation can also be beneficial. Also removing things that Make your mental health worse could be helpful",
+"blockchain": "Blockchain is a decentralized digital ledger that records transactions across multiple computers. It is secure, transparent, and immutable, making it the backbone of cryptocurrencies like Bitcoin.",
+"write a resume": "A good resume should include your contact information, a summary or objective, your work experience, education, and skills. Tailor your resume to the job you're applying for, and keep it concise, ideally one page long.",
+"with anxiety": "Dealing with anxiety can involve mindfulness techniques, regular exercise, and speaking with a mental health professional. It's also important to identify triggers and develop coping strategies that work for you.",
+"lose weight": "The best way to lose weight involves a combination of a healthy diet, regular exercise, and maintaining a calorie deficit. Focus on whole foods like fruits, vegetables, lean proteins, and whole grains. It's also important to stay hydrated and get enough sleep.",
+"YouTube channel": "Starting a YouTube channel involves choosing a niche, creating quality content, and regularly uploading videos. You'll also need to engage with your audience, optimize your videos for search, and promote your channel on social media.",
+"good habits": "Good habits to develop include regular exercise, healthy eating, staying organized, setting goals, practicing gratitude, and continuous learning. These habits can improve your physical health, mental well-being, and overall productivity.",
+"is mindfulness": "Mindfulness is the practice of being fully present in the moment, aware of your thoughts, feelings, and surroundings without judgment. It can help reduce stress, improve focus, and enhance overall well-being.",
+"stay organized": "Staying organized involves decluttering your space, creating a daily or weekly schedule, using lists or planners, and setting priorities. Regularly reviewing and updating your organization system is also important to maintain order.",
+"explain cryptocurrency": "Cryptocurrency is a type of digital or virtual currency that uses cryptography for security. It operates independently of a central bank and can be used for online transactions. Bitcoin and Ethereum are popular examples.",
+"communication skills": "Improving communication skills involves active listening, being clear and concise, maintaining eye contact, and being aware of nonverbal cues. Practice speaking in front of others, and seek feedback to help refine your approach.",
+"good movies": "It depends on your taste! If you like action, you might enjoy 'Mad Max: Fury Road.' For drama, 'The Shawshank Redemption' is a classic. If you’re in the mood for a comedy, 'The Grand Budapest Hotel' is a great pick.",
+"who":"I don't know who."
+};
+
+        const punctuationResponses = [
+"Punctuation can say a lot. What are you trying to express?",
+"Sometimes, a question mark or a period says it all. Want to elaborate?",
+"It seems like you didn't ask a question. Could you provide more context or clarify what you are asking?",
+"It seems like you didn't ask a question. Could you please rephrase or provide more context so I can better understand and assist you?",
+"A single punctuation mark can be intriguing. Care to share what's on your mind?",
+"That's an interesting use of punctuation. Would you like to add some words to go with it?",
+"It looks like you're trying to make a statement. What's the story behind the solitary punctuation mark?",
+"A question mark or period can be a powerful symbol. What does it represent to you?",
+"I'm curious, what's the thought or feeling behind that punctuation mark?",
+"It seems like you're leaving me hanging. Want to finish the thought?",
+"What are you trying to say?",
+"A single mark can be a great conversation starter. What's on your mind?"
+        ];
+
+        const fallbackResponses = [
+            "Can you please rephrase your question?",
+    "That's an interesting question. Can you tell me more about what you're trying to accomplish?",
+    "I might need more information to answer that.",
+    "Let's take a step back. What's the main goal you're trying to achieve?",
+    "I'm not sure I understand. Can you explain differently?",
+    "That's a tough one! Let me think... Actually, I don't have an answer.",
+    "Can you help me understand what you mean by that?",
+    "How does that relate to your question?",
+    "I can offer some general information on a related topic.",
+    "That's a good question. Can you give me a moment to think?",
+    "I'm not sure I have enough information to answer that.",
+    "Can you provide more context about your question?",
+    "I'm not familiar with that specific topic. Can you tell me more?",
+    "Let's explore this topic further. Can you provide more details?",
+    "tell me more...",
+    "Could you elaborate on what you're asking?",
+    "Give me a sec to think... Actually, I don't have an answer.",
+    "I need some extra info to assist you better.",
+    "I need a bit more detail to go on.",
+    "I  need more context to give a useful response. Can you explain further?",
+    "I’m having trouble with your question. Can you provide some additional information?",
+    "I’m not clear on your question. Could you break it down a bit more?",
+    "I'm not sure how to respond, do you want to talk about somthing else?",
+    "What do you really want to ask me? ",
+    "I'm not sure I understand the context. Can you clarify?"
+        ];
+
+        function getResponse() {
+            const userText = document.getElementById("userInput").value.toLowerCase().trim();
+            let response = null;
+
+            // 1. Check for exact preprogrammed responses
+            if (preprogrammedResponses[userText]) {
+                response = preprogrammedResponses[userText];
+            }
+
+            // 2. Check if the input matches any context pattern
+            if (!response) {
+                const matchedPattern = contextPatterns.find(cp => cp.pattern.test(userText));
+                if (matchedPattern) {
+                    response = matchedPattern.response;
+                }
+            }
+
+            // 3. Check for punctuation-only input
+                        if (!response) {
+                if (/^[?.,"']+$/.test(userText)) {
+                    response = punctuationResponses[Math.floor(Math.random() * punctuationResponses.length)];
+                }
+            }
+
+            // 4. Check for keyword-based responses
+            if (!response) {
+                const matchedKeyword = Object.keys(keywordResponses).find(keyword => userText.includes(keyword));
+                if (matchedKeyword) {
+                    response = keywordResponses[matchedKeyword];
+                }
+            }
+
+            // 5. Fallback response if nothing else matched
+            if (!response) {
+                response = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+            }
+
+            displayChat(userText, response);
+            document.getElementById("userInput").value = "";
+        }
+
+        function displayChat(userText, botResponse) {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<p class="you"><strong>You:</strong> ${userText}</p>`;
+            chatbox.innerHTML += `<p class="bot"><strong>AI:</strong> ${botResponse}</p>`;
+        }
+
+                // Add event listener for Enter key
+                document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Prevent the default action of the Enter key (i.e., a new line)
+                getResponse();
+            }
+        });
+    </script>
+</body>
+</html>
